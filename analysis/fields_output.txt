@@ -1,0 +1,90 @@
+field                                           n AI share then    now             Δ (95% CI)        p any AI now  any LLM  filed as CS then→now
+Biology (biochemistry, genetics, molecular)    95          0.8%   6.1%   +5.4% [+3.8%,+7.1%]    1e-10        57%      11%      0.6% → 1.5%
+Neuroscience                                   93          0.5%   5.3%   +4.7% [+3.2%,+6.6%]    6e-09        51%      10%      2.7% → 3.4%
+Medicine                                       99          0.0%   2.8%   +2.8% [+1.8%,+3.8%]    8e-07        34%       1%      0.1% → 0.9%
+Chemistry                                      86          0.1%   4.3%   +4.1% [+2.3%,+6.4%]    6e-07        41%       5%      0.0% → 0.2%
+Materials Science                              92          0.0%   3.1%   +3.0% [+2.1%,+4.0%]    2e-08        41%       0%      0.0% → 0.2%
+Physics & Astronomy                            55          0.7%  10.2%   +9.6% [+5.2%,+14.2%]    6e-06        49%       4%      3.3% → 7.0%
+Mathematics                                    62          1.1%   6.6%   +5.5% [+2.9%,+8.2%]    1e-05        52%       6%      4.8% → 6.1%
+Earth & Planetary Sciences                     86          0.0%   2.8%   +2.8% [+1.9%,+3.9%]    3e-06        34%       0%      0.3% → 0.5%
+Economics & Finance                            70          0.1%   2.5%   +2.4% [+1.2%,+3.9%]    1e-03        26%       7%      0.1% → 1.3%
+Psychology                                     81          0.1%   3.6%   +3.5% [+2.2%,+4.9%]    7e-07        38%      14%      0.1% → 1.2%
+Social Sciences                                73          0.1%   2.1%   +2.1% [+1.0%,+3.3%]    1e-03        25%       4%      0.8% → 1.1%
+Arts & Humanities                              60          0.4%   2.7%   +2.3% [+0.5%,+4.8%]    1e-01        17%       8%      0.9% → 1.4%
+Computer Science                               75         17.6%  30.5%  +12.9% [+6.4%,+19.2%]    1e-04        92%      72%     87.0% → 74.6%
+
+AI share                                       2014   2015   2016   2017   2018   2019   2020   2021   2022   2023   2024   2025   2026
+Biology (biochemistry, genetic top-100     0%     1%     0%     1%     2%     2%     3%     7%    10%     6%    10%    13%    13%
+                               all       0.4%   0.5%   0.5%   0.7%   1.0%   1.3%   1.6%   2.0%   2.4%   3.0%   3.7%   4.7%   5.8%
+Neuroscience                   top-100     2%     1%     2%     5%     4%     6%     2%     9%    12%    11%    10%    12%     6%
+                               all       0.8%   0.9%   1.2%   1.6%   2.5%   3.1%   3.9%   5.0%   6.4%   7.6%   8.9%   9.9%   6.8%
+Medicine                       top-100     0%     0%     2%     5%     5%     5%     0%     2%     3%    18%    11%    14%    16%
+                               all       0.1%   0.1%   0.2%   0.3%   0.5%   0.8%   1.1%   1.6%   2.1%   2.7%   3.5%   4.6%   5.2%
+Chemistry                      top-100     0%     0%     0%     0%     1%     3%     1%     1%     0%     4%     7%    14%     7%
+                               all       0.3%   0.3%   0.3%   0.4%   0.6%   0.8%   1.0%   1.3%   1.7%   2.0%   2.8%   3.8%   4.9%
+Materials Science              top-100     0%     0%     3%     5%     6%     8%     4%     7%    10%    13%     7%    21%    14%
+                               all       0.1%   0.2%   0.2%   0.2%   0.5%   0.7%   1.0%   1.4%   1.9%   2.4%   3.0%   4.3%   5.3%
+Physics & Astronomy            top-100     1%     0%     1%     5%     6%     4%     5%     8%    13%     4%     5%     7%     4%
+                               all       0.2%   0.2%   0.3%   0.4%   0.8%   1.3%   1.7%   2.4%   3.1%   3.6%   4.2%   4.7%   3.8%
+Mathematics                    top-100     3%     4%     4%    15%     6%    17%     3%     8%    13%    12%    13%    15%     5%
+                               all       0.3%   0.3%   0.4%   0.5%   0.6%   0.8%   1.2%   1.6%   1.7%   1.7%   1.8%   2.3%   2.7%
+Earth & Planetary Sciences     top-100     1%     1%     1%     1%     3%     3%     4%     7%    10%    14%    12%    17%    12%
+                               all       0.2%   0.3%   0.3%   0.5%   0.8%   1.2%   1.9%   2.5%   3.3%   4.1%   5.1%   6.2%   7.6%
+Economics & Finance            top-100     0%     1%     0%     0%     2%     4%     5%     2%     3%     6%    21%    17%    14%
+                               all       0.1%   0.1%   0.1%   0.2%   0.4%   0.7%   0.8%   1.2%   1.4%   2.0%   3.0%   4.5%   5.2%
+Psychology                     top-100     0%     1%     3%     4%     3%     7%     2%     3%     8%    16%    18%    31%    21%
+                               all       0.3%   0.3%   0.4%   0.5%   0.7%   1.0%   1.2%   1.6%   2.0%   2.5%   3.3%   4.2%   3.7%
+Social Sciences                top-100     1%     0%     1%     5%     3%     3%     4%    13%    19%    62%    43%    48%    33%
+                               all       0.0%   0.1%   0.1%   0.1%   0.2%   0.3%   0.5%   0.6%   0.8%   1.1%   1.8%   2.9%   6.0%
+Arts & Humanities              top-100     1%     2%     2%     3%     2%     1%     1%     7%    11%    27%    40%    45%    11%
+                               all       0.0%   0.0%   0.0%   0.1%   0.1%   0.1%   0.1%   0.2%   0.3%   0.5%   0.8%   1.4%   2.4%
+Computer Science               top-100    24%    34%    37%    42%    42%    36%    35%    40%    39%    46%    46%    57%    60%
+                               all       2.8%   3.4%   4.1%   6.3%   8.9%  11.7%  14.0%  16.9%  19.0%  22.4%  27.6%  31.0%  29.1%
+
+AI 'citation premium' = AI share among the 100 most-cited papers / AI share among all papers
+field                                         2015-17  2022-24   all-paper AI share 2015→2024   LLM share of all 2024
+Biology (biochemistry, genetics, molecular)      1.2x     2.9x          0.47% → 3.70% (8x)          0.21%
+Neuroscience                                     2.1x     1.4x          0.95% → 8.88% (9x)          0.21%
+Medicine                                        11.1x     3.8x          0.14% → 3.53% (25x)          0.39%
+Chemistry                                        0.0x     1.7x          0.29% → 2.79% (10x)          0.02%
+Materials Science                               14.9x     4.1x          0.15% → 3.01% (20x)          0.10%
+Physics & Astronomy                              6.3x     2.0x          0.22% → 4.15% (19x)          0.05%
+Mathematics                                     20.6x     7.1x          0.29% → 1.82% (6x)          0.07%
+Earth & Planetary Sciences                       3.0x     2.9x          0.26% → 5.12% (19x)          0.03%
+Economics & Finance                              2.2x     4.7x          0.08% → 3.02% (36x)          0.16%
+Psychology                                       7.0x     5.4x          0.26% → 3.28% (13x)          0.43%
+Social Sciences                                 23.2x    33.6x          0.05% → 1.81% (34x)          0.40%
+Arts & Humanities                               58.0x    48.4x          0.03% → 0.84% (28x)          0.26%
+Computer Science                                 8.2x     1.9x          3.39% → 27.59% (8x)          4.56%
+
+wrote data/fields/results.json
+
+Strict rule: field                                  then    now        p  any now
+             Biology (biochemistry, genetics, mol   0.2%   2.9%    5e-06      36%
+             Neuroscience                           0.2%   2.4%    3e-05      28%
+             Medicine                               0.0%   1.7%    1e-04      24%
+             Chemistry                              0.0%   2.9%    2e-05      31%
+             Materials Science                      0.0%   1.5%    4e-05      27%
+             Physics & Astronomy                    0.5%   4.8%    8e-04      33%
+             Mathematics                            0.7%   3.7%    8e-04      37%
+             Earth & Planetary Sciences             0.0%   1.1%    1e-03      21%
+             Economics & Finance                    0.1%   1.3%    9e-02      11%
+             Psychology                             0.0%   1.7%    7e-06      33%
+             Social Sciences                        0.0%   1.0%    1e-02      18%
+             Arts & Humanities                      0.1%   1.4%    1e-01      12%
+             Computer Science                       6.7%  12.0%    5e-03      71%
+
+Top-cited AI papers 2022-25 with an AI term in the title: 
+  Biology (biochemistry, genetics, molecular)    28% of 39
+  Neuroscience                                   47% of 45
+  Medicine                                       87% of 46
+  Chemistry                                      56% of 25
+  Materials Science                              51% of 51
+  Physics & Astronomy                            41% of 29
+  Mathematics                                    55% of 53
+  Earth & Planetary Sciences                     53% of 53
+  Economics & Finance                            74% of 47
+  Psychology                                     81% of 73
+  Social Sciences                                93% of 172
+  Arts & Humanities                              89% of 123
+  Computer Science                               62% of 188

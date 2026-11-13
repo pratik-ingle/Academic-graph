@@ -1,0 +1,1978 @@
+<title>CS &amp; Robotics Atlas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+:root {
+  /* Layout: a framed map plate of the embedding space; control bar above; detail panel docked right (stacked under the map on phones) */
+  --bg: #f4f5f1;
+  --surface: #fbfbf8;
+  --surface-2: #eceee8;
+  --ink: #15181b;
+  --ink-2: #4b5157;
+  --muted: #61686e;
+  --line: #d9dcd4;
+  --grid: #e7e9e3;
+  --focus: #1c5cab;
+  --edge-rgb: 21, 24, 27;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+  --s5: #e87ba4; --s6: #008300; --s7: #6250d6; --s8: #e34948;
+  --seq-lo: #b7d3f6; --seq-hi: #0d366b;
+  --div-neg: #e34948; --div-mid: #c3c4bd; --div-pos: #2a78d6;
+  --bar: #bcc0b8; --none: #cdd0c8;
+  --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --font-ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-label: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --panel-w: 384px;
+  --radius: 6px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121417; --surface: #181b1f; --surface-2: #20242a; --ink: #eceee8; --ink-2: #b6bbb4;
+    --muted: #8a9096; --line: #2b3036; --grid: #1b1f23; --focus: #6da7ec; --edge-rgb: 236, 238, 232;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+    --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
+    --seq-lo: #1c3a5e; --seq-hi: #b7d3f6;
+    --div-neg: #e66767; --div-mid: #50524f; --div-pos: #3987e5; --bar: #4b525a; --none: #353a41;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121417; --surface: #181b1f; --surface-2: #20242a; --ink: #eceee8; --ink-2: #b6bbb4;
+  --muted: #8a9096; --line: #2b3036; --grid: #1b1f23; --focus: #6da7ec; --edge-rgb: 236, 238, 232;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+  --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
+  --seq-lo: #1c3a5e; --seq-hi: #b7d3f6;
+    --div-neg: #e66767; --div-mid: #50524f; --div-pos: #3987e5; --bar: #4b525a; --none: #353a41;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 var(--font-ui); -webkit-font-smoothing: antialiased; }
+[hidden] { display: none !important; }
+button, input { font: inherit; color: inherit; }
+a { color: var(--focus); text-underline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.app {
+  height: 100%;
+  display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 12px;
+  padding-block: 14px 16px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* ---- control bar ---- */
+.bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
+.brand { display: grid; gap: 1px; margin-right: auto; min-width: 0; }
+.brand h1 { margin: 0; font: 600 23px/1.1 var(--font-display); letter-spacing: -0.01em; text-wrap: balance; }
+.brand p { margin: 0; color: var(--ink-2); font-size: 12.5px; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+.ctl { display: flex; align-items: center; gap: 6px; }
+.ctl > span { font: 600 10.5px/1 var(--font-label); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 5px; background: var(--surface); padding: 2px; gap: 2px; }
+.seg button { border: 0; background: none; padding: 4px 9px; border-radius: 3px; font-size: 12.5px; color: var(--ink-2); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.seg button:hover { color: var(--ink); background: var(--surface-2); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.seg .key { width: 14px; height: 0; border-top: 1.5px solid currentColor; }
+.seg .key.dash { border-top-style: dashed; }
+
+.search { position: relative; width: min(300px, 100%); }
+.search input {
+  width: 100%; height: 34px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface);
+  padding: 0 34px 0 32px; font-size: 13.5px;
+}
+.search input::placeholder { color: var(--muted); }
+.search svg { position: absolute; left: 10px; top: 10px; width: 14px; height: 14px; stroke: var(--muted); fill: none; stroke-width: 2; }
+.search kbd { position: absolute; right: 8px; top: 8px; font: 500 11px/16px var(--font-mono); color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; }
+.results {
+  position: absolute; top: 38px; left: 0; right: 0; z-index: 20; margin: 0; padding: 4px; list-style: none;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,.12);
+}
+.results li { padding: 6px 8px; border-radius: 4px; cursor: pointer; display: grid; grid-template-columns: 10px 1fr auto; gap: 8px; align-items: center; }
+.results li[aria-selected="true"], .results li:hover { background: var(--surface-2); }
+.results .nm { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.results .in { grid-column: 2 / 4; color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: -3px; }
+.results .ct { font: 12px var(--font-mono); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.results .empty { color: var(--muted); display: block; }
+
+/* ---- main area ---- */
+.main { display: grid; grid-template-columns: minmax(0, 1fr) var(--panel-w); gap: 12px; min-height: 0; }
+.stage { position: relative; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--bg); min-height: 0; }
+#map { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; display: block; }
+.zoom { position: absolute; left: 10px; bottom: 10px; display: grid; gap: 4px; }
+.zoom button { width: 32px; height: 32px; border: 1px solid var(--line); background: var(--surface); border-radius: 5px; cursor: pointer; font: 500 16px/1 var(--font-ui); color: var(--ink-2); }
+.zoom button.fit { font-size: 10.5px; font-family: var(--font-label); letter-spacing: .06em; text-transform: uppercase; }
+.zoom button:hover { color: var(--ink); background: var(--surface-2); }
+.zoom button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.hint { position: absolute; right: 12px; bottom: 10px; font-size: 11.5px; color: var(--muted); pointer-events: none; }
+.tip {
+  position: absolute; z-index: 5; pointer-events: none; max-width: 280px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 5px; padding: 7px 9px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.12); font-size: 12.5px;
+}
+.tip b { display: block; font: 600 14px/1.25 var(--font-display); }
+.tip .m { color: var(--ink-2); }
+.tip .n { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-2); margin-top: 3px; font-variant-numeric: tabular-nums; }
+
+/* table view */
+.table-wrap { position: absolute; inset: 0; overflow: auto; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { position: sticky; top: 0; background: var(--surface); z-index: 1; font: 600 10.5px/1.2 var(--font-label); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+th button { all: unset; cursor: pointer; }
+th button:focus-visible { outline: 2px solid var(--focus); }
+th[aria-sort] button { color: var(--ink); }
+td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+td.nm { font-weight: 500; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
+td.inst { color: var(--ink-2); max-width: 260px; overflow: hidden; text-overflow: ellipsis; }
+tbody tr { cursor: pointer; }
+tbody tr:hover, tbody tr[aria-selected="true"] { background: var(--surface-2); }
+
+/* ---- panel ---- */
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: auto; min-height: 0; min-width: 0; }
+.pane { padding: 18px 18px 22px; display: grid; gap: 18px; }
+.eyebrow { margin: 0 0 6px; font: 600 10.5px/1 var(--font-label); text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+.pane h2 { margin: 0; font: 600 25px/1.15 var(--font-display); text-wrap: balance; }
+.pane p { margin: 0; color: var(--ink-2); line-height: 1.5; }
+.figs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-block: 1px solid var(--line); }
+.figs div { padding: 9px 0 8px; display: grid; gap: 2px; }
+.figs div + div { padding-left: 10px; border-left: 1px solid var(--line); }
+.figs b { font: 500 16px/1.1 var(--font-mono); font-variant-numeric: tabular-nums; }
+.figs span { font-size: 11px; color: var(--muted); line-height: 1.2; }
+
+.areas { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.areas button {
+  width: 100%; text-align: left; border: 0; background: none; padding: 7px 8px; border-radius: 5px; cursor: pointer;
+  display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; column-gap: 9px; row-gap: 1px; align-items: baseline;
+}
+.areas button:hover { background: var(--surface-2); }
+.areas button[aria-pressed="true"] { background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); }
+.sw { width: 10px; height: 10px; border-radius: 50%; display: inline-block; box-shadow: 0 0 0 1.5px var(--surface); align-self: center; }
+.areas .lb { font-weight: 500; min-width: 0; }
+.areas .ct { font: 12px var(--font-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.areas .who { grid-column: 2 / 4; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ramp { display: grid; gap: 4px; }
+.ramp .bar-g { height: 10px; border-radius: 3px; background: linear-gradient(90deg, var(--seq-lo), var(--seq-hi)); }
+.ramp .ends { display: flex; justify-content: space-between; font: 11px var(--font-mono); color: var(--muted); }
+.lines-key { display: grid; gap: 6px; font-size: 12.5px; color: var(--ink-2); }
+.lines-key div { display: flex; align-items: center; gap: 8px; }
+.lines-key i { width: 22px; border-top: 1.5px solid var(--ink-2); }
+.lines-key i.dash { border-top: 1.5px dashed var(--ink-2); }
+details { border-top: 1px solid var(--line); padding-top: 12px; }
+summary { cursor: pointer; font-weight: 500; }
+details ul { margin: 10px 0 0; padding-left: 18px; color: var(--ink-2); display: grid; gap: 6px; font-size: 13px; }
+.foot { font-size: 12px; color: var(--muted); }
+
+/* detail */
+.back { justify-self: start; border: 0; background: none; padding: 2px 0; color: var(--ink-2); cursor: pointer; font-size: 12.5px; }
+.back:hover { color: var(--ink); }
+.who-h { display: grid; gap: 4px; }
+.who-h .inst { color: var(--ink-2); }
+.kv { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 3px 10px; margin: 4px 0 0; font-size: 12.5px; }
+.kv dt { font: 600 10px/18px var(--font-label); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.kv dd { margin: 0; color: var(--ink-2); display: flex; align-items: baseline; gap: 7px; min-width: 0; }
+.kv dd .sw { transform: translateY(1px); flex: none; }
+.tag { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink-2); }
+.sect { display: grid; gap: 8px; }
+.sect h3 { margin: 0; font: 600 10.5px/1 var(--font-label); text-transform: uppercase; letter-spacing: .12em; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+.sect h3 em { font: 500 11px var(--font-mono); letter-spacing: 0; text-transform: none; font-style: normal; }
+.spark { display: grid; gap: 2px; }
+.spark svg { width: 100%; height: 74px; display: block; overflow: visible; }
+.spark .read { font: 11.5px var(--font-mono); color: var(--ink-2); min-height: 16px; font-variant-numeric: tabular-nums; }
+.meter { height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; }
+.meter i { display: block; height: 100%; background: var(--focus); border-radius: 3px; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.chips span { font-size: 12px; border: 1px solid var(--line); border-radius: 4px; padding: 2px 7px; color: var(--ink-2); }
+.papers { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+.papers a { color: var(--ink); text-decoration: none; font-weight: 500; line-height: 1.35; }
+.papers a:hover { text-decoration: underline; color: var(--focus); }
+.papers .m { display: block; font: 11.5px var(--font-mono); color: var(--muted); margin-top: 1px; font-variant-numeric: tabular-nums; }
+.people { margin: 0; padding: 0; list-style: none; display: grid; }
+.people button {
+  width: 100%; border: 0; background: none; text-align: left; cursor: pointer; padding: 5px 6px; border-radius: 4px;
+  display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 0 9px; align-items: center;
+}
+.people button:hover { background: var(--surface-2); }
+.people .nm { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.people .in { grid-column: 2; font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.people .v { grid-row: 1 / 3; grid-column: 3; font: 12px var(--font-mono); color: var(--ink-2); font-variant-numeric: tabular-nums; text-align: right; }
+.people .v i { display: block; height: 3px; margin-top: 3px; background: var(--focus); border-radius: 2px; opacity: .7; margin-left: auto; }
+.links { display: flex; flex-wrap: wrap; gap: 6px; }
+.links a { font-size: 12.5px; text-decoration: none; border: 1px solid var(--line); border-radius: 4px; padding: 4px 9px; color: var(--ink); }
+.links a:hover { background: var(--surface-2); }
+.more { border: 0; background: none; color: var(--focus); cursor: pointer; padding: 2px 6px; justify-self: start; font-size: 12.5px; }
+
+/* findings */
+.fnav { display: flex; align-items: center; gap: 8px; }
+.fnav > button, .fdots button { border: 1px solid var(--line); background: var(--surface); border-radius: 5px; cursor: pointer; color: var(--ink-2); font: 500 12.5px/1 var(--font-mono); height: 28px; min-width: 28px; }
+.fnav > button:hover:not(:disabled), .fdots button:hover { background: var(--surface-2); color: var(--ink); }
+.fnav > button:disabled { opacity: .4; cursor: default; }
+.fdots { display: flex; gap: 4px; flex: 1; justify-content: center; }
+.fdots button[aria-current="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.pane p.lead { color: var(--ink); font-size: 14.5px; line-height: 1.55; }
+.pane p.lead b { font-weight: 600; }
+.pane p.note { font-size: 12px; color: var(--muted); }
+svg.chart { width: 100%; height: auto; display: block; overflow: visible; }
+.chart .cl { font: 12px var(--font-ui); fill: var(--ink-2); }
+.chart .cv { font: 500 11px var(--font-mono); fill: var(--ink); }
+.chart .ax { font: 10.5px var(--font-mono); fill: var(--muted); }
+.chart .hit { fill: transparent; }
+.chart .bar { fill: var(--bar); }
+.chart .bar.hl { fill: var(--focus); }
+.chart .row:hover .cl { fill: var(--ink); }
+.chart .row:hover .bar:not(.hl) { fill: var(--ink-2); }
+.chart .dl { stroke: var(--bar); stroke-width: 2; }
+.chart .da { fill: var(--surface); stroke: var(--ink-2); stroke-width: 1.5; }
+.chart .db { fill: var(--focus); stroke: var(--surface); stroke-width: 1.5; }
+.chart .refl { stroke: var(--muted); stroke-dasharray: 3 3; }
+.chart .basel { stroke: var(--line); }
+.chart .area { fill: var(--focus); opacity: .14; }
+.chart .ln { fill: none; stroke: var(--focus); stroke-width: 2; stroke-linejoin: round; }
+.chart .pt { fill: var(--focus); stroke: var(--surface); stroke-width: 1.5; }
+.lgd { display: flex; gap: 6px 14px; font-size: 12px; color: var(--ink-2); flex-wrap: wrap; }
+.lgd span { display: inline-flex; align-items: center; gap: 6px; }
+.lgd i { display: inline-block; flex: none; }
+.lgd i.o { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--ink-2); background: var(--surface); }
+.lgd i.f, .lgd i.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--focus); }
+.lgd i.dash { width: 20px; border-top: 1.6px dashed var(--ink); }
+.ramp .bar-d { height: 10px; border-radius: 3px; background: linear-gradient(90deg, var(--div-neg), var(--div-mid), var(--div-pos)); }
+.tog { justify-self: start; border: 1px solid var(--line); background: var(--surface); border-radius: 5px; padding: 6px 10px; cursor: pointer; font-size: 12.5px; color: var(--ink); }
+.tog:hover { background: var(--surface-2); }
+.tog[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.cta { width: 100%; text-align: left; border: 1px solid var(--line); background: var(--surface-2); border-radius: 6px; padding: 10px 12px; cursor: pointer; display: grid; gap: 2px; }
+.cta b { font: 600 15px/1.25 var(--font-display); }
+.cta span { font-size: 12.5px; color: var(--ink-2); }
+.cta:hover { border-color: var(--ink-2); }
+.cohorts { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.cohorts button { width: 100%; text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 5px; padding: 6px 9px; cursor: pointer; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: baseline; font-size: 12.5px; color: var(--ink); }
+.cohorts button:hover { background: var(--surface-2); }
+.cohorts button[aria-pressed="true"] { border-color: var(--focus); box-shadow: inset 0 0 0 1px var(--focus); }
+.cohorts .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.cohorts .c { font: 11.5px var(--font-mono); color: var(--muted); }
+.twins { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.twins li { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 13px; }
+.twins button { border: 0; background: none; padding: 4px 0; cursor: pointer; font-weight: 500; text-align: left; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.twins button:hover { color: var(--focus); text-decoration: underline; }
+.twins span { color: var(--muted); }
+.twins .v { font: 12px var(--font-mono); color: var(--ink-2); }
+.method summary { font-size: 12.5px; color: var(--ink-2); }
+.method p { margin-top: 8px; font-size: 12.5px; }
+.ctip { position: fixed; z-index: 30; pointer-events: none; max-width: 280px; background: var(--surface); border: 1px solid var(--line); border-radius: 5px; padding: 6px 8px; font-size: 12px; line-height: 1.4; box-shadow: 0 6px 18px rgba(0,0,0,.12); color: var(--ink); }
+
+/* beyond CS & methods (full-stage documents) */
+.doc-wrap { position: absolute; inset: 0; overflow: auto; background: var(--surface); }
+.doc { max-width: 980px; margin: 0 auto; padding: 22px 24px 44px; display: grid; gap: 30px; }
+.doc header { display: grid; gap: 6px; }
+.doc h2 { margin: 0; font: 600 27px/1.15 var(--font-display); text-wrap: balance; }
+.doc h3 { margin: 0; font: 600 17px/1.25 var(--font-display); }
+.doc p { margin: 0; color: var(--ink-2); max-width: 74ch; line-height: 1.55; }
+.doc p.sub { color: var(--muted); font-size: 12.5px; }
+.doc section { display: grid; gap: 10px; min-width: 0; }
+.doc .chart-x { overflow-x: auto; }
+.doc .chart-x > svg { min-width: 560px; max-width: 760px; }
+.doc table { font-size: 12.5px; }
+.doc tbody tr { cursor: default; }
+.doc .mtable th, .doc .mtable td { white-space: normal; vertical-align: top; line-height: 1.45; }
+.doc .mtable td:first-child { font-weight: 600; min-width: 150px; }
+.doc .mtable td:last-child { color: var(--muted); min-width: 120px; }
+.smalls { display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 16px 20px; }
+.smalls figure { margin: 0; min-width: 0; }
+.smalls svg { width: 100%; height: auto; display: block; overflow: visible; }
+.ex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px 26px; }
+.ex-grid h4 { margin: 0 0 6px; font: 600 10.5px/1.2 var(--font-label); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.ex-grid ol { margin: 0; padding-left: 18px; display: grid; gap: 5px; font-size: 12.5px; line-height: 1.4; }
+.ex-grid .m { display: block; font: 11px var(--font-mono); color: var(--muted); }
+.kv2 { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 10px 18px; margin: 0; }
+.kv2 dt { font-weight: 600; }
+.kv2 dd { margin: 0; color: var(--ink-2); line-height: 1.55; max-width: 74ch; }
+.doc ul.bul, .doc ol.bul, .pane ul.bul, .pane ol.bul, .pane ol.ins { margin: 0; padding-left: 18px; display: grid; gap: 7px; color: var(--ink-2); line-height: 1.5; }
+.doc ul.bul, .doc ol.bul { max-width: 78ch; }
+.pane ol.ins { gap: 10px; font-size: 13.5px; }
+.ins b, .bul b { color: var(--ink); font-weight: 600; }
+pre.code { margin: 0; padding: 12px 14px; background: var(--surface-2); border-radius: 6px; overflow-x: auto; font: 12px/1.6 var(--font-mono); color: var(--ink); }
+.toc { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc button { width: 100%; text-align: left; border: 0; background: none; padding: 7px 8px; border-radius: 4px; cursor: pointer; color: var(--ink); font-size: 13.5px; }
+.toc button:hover { background: var(--surface-2); }
+.chart .gl { stroke: var(--grid); }
+.chart .diag { stroke: var(--muted); stroke-dasharray: 4 4; }
+.chart .bdot { fill: var(--ink-2); stroke: var(--surface); stroke-width: 1.5; }
+.chart .bdot.hl { fill: var(--focus); }
+.chart .lp { fill: none; stroke: var(--focus); stroke-width: 2; stroke-linejoin: round; }
+.chart .lt { fill: none; stroke: var(--ink-2); stroke-width: 1.4; stroke-dasharray: 4 3; }
+.chart .ttl { font: 600 12.5px var(--font-ui); fill: var(--ink); }
+.chart .part { opacity: .45; stroke-dasharray: 2 3; }
+.chart .pend { fill: var(--surface); stroke: var(--focus); stroke-width: 1.3; }
+.chart .halo { paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.chart .lead-l { stroke: var(--muted); stroke-width: 1; }
+.chart .ci { stroke: var(--ink-2); stroke-width: 1.2; }
+.chart [tabindex]:focus-visible, .smalls figure:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.rowbtn { all: unset; cursor: pointer; font-weight: 500; }
+.rowbtn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.seg button:disabled { opacity: .45; cursor: default; }
+.seg button:disabled:hover { background: none; color: var(--ink-2); }
+.jump { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 7px 14px; font-size: 13px; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,.12); }
+.doc .btable th { white-space: normal; vertical-align: bottom; }
+.doc .btable th, .doc .btable td { padding: 6px 8px; }
+.lgd i.ln { width: 20px; border-top: 2px solid var(--focus); }
+.lgd i.lt { width: 20px; border-top: 1.5px dashed var(--ink-2); }
+[data-field] { transition: opacity .12s; }
+
+@media (max-width: 880px) {
+  .kv2 { grid-template-columns: minmax(0, 1fr); gap: 2px 0; }
+  .kv2 dd { margin-bottom: 8px; }
+  .doc { padding: 18px 14px 36px; }
+  .main.docmode { grid-template-rows: 85vh auto; }
+  html, body { height: auto; }
+  .app { height: auto; min-height: 100%; }
+  .main { grid-template-columns: minmax(0, 1fr); grid-template-rows: min(62vh, 520px) auto; }
+  .panel { overflow: visible; }
+  .hint { display: none; }
+  .search { width: 100%; order: 3; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+<!--BODY-->
+<div class="app">
+  <header class="bar">
+    <div class="brand">
+      <h1>CS &amp; Robotics Atlas</h1>
+      <p id="subtitle">The most-cited researchers in computer science and robotics, placed by what they publish</p>
+    </div>
+    <div class="search" id="search-box">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Find a researcher or institution" autocomplete="off" aria-label="Find a researcher or institution" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="results">
+      <kbd aria-hidden="true">/</kbd>
+      <ul class="results" id="results" role="listbox" hidden></ul>
+    </div>
+    <div class="controls">
+      <div class="ctl"><span>Lines</span>
+        <div class="seg" role="group" aria-label="Lines">
+          <button id="t-co" aria-pressed="true"><i class="key"></i>Co-authors</button>
+          <button id="t-sim" aria-pressed="false"><i class="key dash"></i>Similar work</button>
+        </div>
+      </div>
+      <div class="ctl"><span>Colour</span>
+        <div class="seg" role="group" aria-label="Colour dots by">
+          <button id="c-area" aria-pressed="true">Area</button>
+          <button id="c-rob" aria-pressed="false">Robotics</button>
+        </div>
+      </div>
+      <div class="ctl"><span>View</span>
+        <div class="seg" role="group" aria-label="View">
+          <button id="v-map" aria-pressed="true">Map</button>
+          <button id="v-3d" aria-pressed="false">3D</button>
+          <button id="v-find" aria-pressed="false">Findings</button>
+          <button id="v-beyond" aria-pressed="false">Beyond CS</button>
+          <button id="v-table" aria-pressed="false">Table</button>
+          <button id="v-methods" aria-pressed="false">Methods</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="stage" id="stage" aria-label="Map of researchers">
+      <canvas id="map" role="img" aria-label="Map of researchers positioned by research similarity. Use the table view or the panel for a text version."></canvas>
+      <div class="tip" id="tip" hidden></div>
+      <div class="zoom">
+        <button id="z-in" aria-label="Zoom in">+</button>
+        <button id="z-out" aria-label="Zoom out">−</button>
+        <button id="z-fit" class="fit" aria-label="Show whole map">Fit</button>
+        <button id="z-spin" aria-label="Auto-rotate" aria-pressed="false" title="Auto-rotate" hidden>↻</button>
+      </div>
+      <div class="hint" id="hint">Scroll to zoom · drag to pan · click a dot</div>
+      <div class="table-wrap" id="table-wrap" hidden></div>
+      <div class="doc-wrap" id="doc-wrap" hidden></div>
+      <button class="jump" id="jump" hidden>Details below ↓</button>
+    </section>
+    <aside class="panel" id="panel" aria-label="Details"></aside>
+  </main>
+</div>
+
+<div class="sr-only" id="status" role="status" aria-live="polite"></div>
+<script id="atlas-data" type="application/json">/*__DATA__*/</script>
+<script>
+(() => {
+"use strict";
+const $ = (s) => document.querySelector(s);
+const D = JSON.parse($("#atlas-data").textContent);
+const R = D.researchers, N = R.length, AREAS = D.areas, COMMS = D.communities;
+const fmt = (n) => Number(n).toLocaleString("en-US");
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const safeUrl = (u) => (/^https?:\/\//i.test(String(u || "")) ? u : "#");
+const fold = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// ---------- graph structure ----------
+const co = Array.from({ length: N }, () => new Map());
+for (const [i, j, w] of D.coauthor) { co[i].set(j, w); co[j].set(i, w); }
+const simAdj = Array.from({ length: N }, () => new Set());
+for (const [i, j] of D.similar) { simAdj[i].add(j); simAdj[j].add(i); }
+const areaSets = AREAS.map((a) => new Set(R.map((r, i) => (r.a === a.id ? i : -1)).filter((i) => i >= 0)));
+const cites = R.map((r) => r.cites), maxC = Math.max(...cites), minC = Math.min(...cites);
+const baseR = R.map((r) => 2.3 + 8.7 * Math.sqrt((r.cites - minC) / (maxC - minC || 1)));
+const drawOrder = [...R.keys()].sort((a, b) => baseR[b] - baseR[a]);
+const byCites = [...R.keys()].sort((a, b) => R[b].cites - R[a].cites);
+const hay = R.map((r) => fold(r.name + " | " + (r.inst || "")));
+// line length in map units: long links fade so local structure stays readable
+const spanX = Math.max(...R.map((r) => r.x)) - Math.min(...R.map((r) => r.x));
+const lenBucket = (i, j) => { const d = Math.hypot(R[i].x - R[j].x, R[i].y - R[j].y) / spanX; return d < 0.12 ? 0 : d < 0.3 ? 1 : 2; };
+const coBuckets = [0, 1, 2].map(() => [0, 1, 2].map(() => []));
+for (const e of D.coauthor) coBuckets[e[2] >= 15 ? 2 : e[2] >= 4 ? 1 : 0][lenBucket(e[0], e[1])].push(e);
+const simBuckets = [[], [], []];
+for (const e of D.similar) simBuckets[lenBucket(e[0], e[1])].push(e);
+const LEN_FADE = [1, 0.5, 0.2];
+
+const st = { sel: -1, hover: -1, area: -1, hoverArea: -1, co: true, sim: false, color: "area", view: "map", sort: { key: "rank", dir: 1 },
+  finding: 0, cohort: -1 };
+
+// ---------- theme tokens ----------
+let T = {};
+const hex = (h) => { h = h.replace("#", ""); return [0, 2, 4].map((k) => parseInt(h.slice(k, k + 2), 16)); };
+function readTokens() {
+  const cs = getComputedStyle(document.documentElement), g = (k) => cs.getPropertyValue(k).trim();
+  T = {
+    bg: g("--bg"), surface: g("--surface"), ink: g("--ink"), ink2: g("--ink-2"), muted: g("--muted"),
+    grid: g("--grid"), focus: g("--focus"), edge: g("--edge-rgb"),
+    series: [1, 2, 3, 4, 5, 6, 7, 8].map((k) => g("--s" + k)),
+    lo: hex(g("--seq-lo")), hi: hex(g("--seq-hi")), fLabel: g("--font-label"), fUi: g("--font-ui"),
+    neg: hex(g("--div-neg")), mid: hex(g("--div-mid")), pos: hex(g("--div-pos")), none: g("--none"),
+  };
+}
+const seq = (t) => "rgb(" + T.lo.map((v, k) => Math.round(v + (T.hi[k] - v) * t)).join(",") + ")";
+const areaColor = (a) => T.series[a % 8];
+const nodeColor = (i) => (st.view === "findings" && F ? findingColor(i)
+  : st.color === "area" ? areaColor(R[i].a) : seq(Math.min(1, R[i].rob / 0.9)));
+
+// ---------- camera ----------
+const cv = $("#map"), ctx = cv.getContext("2d");
+let W = 0, H = 0, dpr = 1, s0 = 1, touched = false, animId = 0;
+const cam = { s: 1, x: 0, y: 0 };
+function bbox(idxs) {
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const i of idxs) { const r = R[i]; x0 = Math.min(x0, r.x); y0 = Math.min(y0, r.y); x1 = Math.max(x1, r.x); y1 = Math.max(y1, r.y); }
+  return [x0, y0, x1, y1];
+}
+function camFor(idxs, pad, minS, maxS) {
+  const [x0, y0, x1, y1] = bbox(idxs);
+  let s = Math.min((W - 2 * pad) / Math.max(x1 - x0, 0.2), (H - 2 * pad) / Math.max(y1 - y0, 0.2));
+  if (minS) s = Math.max(s, minS);
+  if (maxS) s = Math.min(s, maxS);
+  return { s, x: W / 2 - s * (x0 + x1) / 2, y: H / 2 - s * (y0 + y1) / 2 };
+}
+function flyTo(t, animate = true) {
+  cancelAnimationFrame(animId);
+  if (!animate || reduceMotion) { Object.assign(cam, t); draw(); return; }
+  const f = { ...cam }, t0 = performance.now(), dur = 520;
+  const fc = [(W / 2 - f.x) / f.s, (H / 2 - f.y) / f.s], tc = [(W / 2 - t.x) / t.s, (H / 2 - t.y) / t.s];
+  const step = (now) => {
+    let k = Math.min(1, (now - t0) / dur); k = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+    const s = Math.exp(Math.log(f.s) + (Math.log(t.s) - Math.log(f.s)) * k);
+    const wx = fc[0] + (tc[0] - fc[0]) * k, wy = fc[1] + (tc[1] - fc[1]) * k;
+    cam.s = s; cam.x = W / 2 - wx * s; cam.y = H / 2 - wy * s; draw();
+    if (k < 1) animId = requestAnimationFrame(step);
+  };
+  animId = requestAnimationFrame(step);
+}
+const clampS = (s) => Math.max(s0 * 0.5, Math.min(s0 * 40, s));
+function zoomAt(mx, my, k) {
+  cancelAnimationFrame(animId); touched = true;
+  const s = clampS(cam.s * k), wx = (mx - cam.x) / cam.s, wy = (my - cam.y) / cam.s;
+  cam.s = s; cam.x = mx - wx * s; cam.y = my - wy * s; draw();
+}
+function fitAll(animate) { const c = camFor([...R.keys()], 36); s0 = c.s; flyTo(c, animate); }
+function resize() {
+  const b = cv.getBoundingClientRect();
+  if (!b.width || !b.height) return;
+  const oldW = W, oldH = H;
+  dpr = Math.min(2, window.devicePixelRatio || 1); W = b.width; H = b.height;
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  if (HAS3D) { // keep the 3D zoom relative to the fitted scale
+    const rel = cam3.s / s3; s3 = fitScale3();
+    if (!touched3 || !oldW) { cam3.s = s3; cam3.t = [0, 0, 0]; } else cam3.s = s3 * rel;
+  }
+  if (!touched || !oldW) fitAll(false);
+  else { s0 = camFor([...R.keys()], 36).s; cam.x += (W - oldW) / 2; cam.y += (H - oldH) / 2; draw(); }
+}
+
+// ---------- drawing ----------
+const sx = (i) => R[i].x * cam.s + cam.x, sy = (i) => R[i].y * cam.s + cam.y;
+const zoomF = () => cam.s / s0;
+const radScale = () => Math.min(2.4, Math.max(0.85, Math.pow(zoomF(), 0.42)));
+function activeSet() {
+  if (st.sel >= 0) return new Set([st.sel, ...co[st.sel].keys(), ...R[st.sel].sim.map((s) => s[0])]);
+  const a = st.hoverArea >= 0 ? st.hoverArea : st.area;
+  if (a >= 0) return areaSets[a];
+  return st.view === "findings" && F && st.finding === 2 ? robRlSet : null;
+}
+function drawGrid() {
+  let step = Math.pow(2, Math.round(Math.log2(130 / cam.s)));
+  const x0 = -cam.x / cam.s, x1 = (W - cam.x) / cam.s, y0 = -cam.y / cam.s, y1 = (H - cam.y) / cam.s;
+  ctx.beginPath();
+  for (let x = Math.floor(x0 / step) * step; x <= x1; x += step) { const p = Math.round(x * cam.s + cam.x) + 0.5; ctx.moveTo(p, 0); ctx.lineTo(p, H); }
+  for (let y = Math.floor(y0 / step) * step; y <= y1; y += step) { const p = Math.round(y * cam.s + cam.y) + 0.5; ctx.moveTo(0, p); ctx.lineTo(W, p); }
+  ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.stroke();
+}
+function drawEdges(act) {
+  const dim = !!act;
+  const keep = (i, j) => !act || (act.has(i) && act.has(j));
+  if (showSim()) {
+    ctx.setLineDash([3, 3]); ctx.lineWidth = 0.7;
+    simBuckets.forEach((b, L) => {
+      ctx.beginPath();
+      for (const [i, j] of b) if (keep(i, j)) { ctx.moveTo(sx(i), sy(i)); ctx.lineTo(sx(j), sy(j)); }
+      ctx.strokeStyle = `rgba(${T.edge},${(dim ? 0.10 : 0.2) * LEN_FADE[L]})`; ctx.stroke();
+    });
+    ctx.setLineDash([]);
+  }
+  if (showCo()) {
+    coBuckets.forEach((byLen, k) => byLen.forEach((b, L) => {
+      ctx.beginPath();
+      for (const [i, j] of b) if (keep(i, j)) { ctx.moveTo(sx(i), sy(i)); ctx.lineTo(sx(j), sy(j)); }
+      ctx.lineWidth = [0.6, 1.1, 1.9][k];
+      ctx.strokeStyle = `rgba(${T.edge},${(dim ? 0.12 : [0.17, 0.26, 0.36][k]) * LEN_FADE[L]})`; ctx.stroke();
+    }));
+  }
+  if (st.sel >= 0) {
+    const i = st.sel, x = sx(i), y = sy(i);
+    ctx.beginPath();
+    for (const [j] of R[i].sim) { ctx.moveTo(x, y); ctx.lineTo(sx(j), sy(j)); }
+    ctx.setLineDash([4, 3]); ctx.lineWidth = 1.3; ctx.strokeStyle = T.focus; ctx.stroke(); ctx.setLineDash([]);
+    for (const [j, w] of co[i]) {
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(sx(j), sy(j));
+      ctx.lineWidth = Math.min(3.2, 0.9 + Math.log2(1 + w) * 0.45); ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.75; ctx.stroke(); ctx.globalAlpha = 1;
+    }
+  }
+}
+function overlaps(b, boxes) {
+  for (const o of boxes) if (b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]) return true;
+  return false;
+}
+function haloText(text, x, y, color) {
+  ctx.lineWidth = 3.5; ctx.strokeStyle = T.bg; ctx.lineJoin = "round"; ctx.strokeText(text, x, y);
+  ctx.fillStyle = color; ctx.fillText(text, x, y);
+}
+function drawRegionLabels(boxes, act) {
+  // zoomed out: the 8 area names; zoomed in (or one area focused): community labels
+  const z = zoomF(), area = st.hoverArea >= 0 ? st.hoverArea : st.area;
+  if (st.sel >= 0) return;
+  const tierAreas = z < 1.7 && area < 0 && !(st.view === "findings" && st.finding === 3);
+  const alpha = tierAreas ? 1 : Math.max(0, Math.min(1, 2.2 - z * 0.3));
+  if (alpha <= 0.02) return;
+  ctx.save(); ctx.globalAlpha = alpha;
+  ctx.font = tierAreas ? `600 12.5px ${T.fLabel}` : `600 11px ${T.fLabel}`;
+  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  if ("letterSpacing" in ctx) ctx.letterSpacing = tierAreas ? "1.6px" : "1.3px";
+  const items = tierAreas ? AREAS.map((a) => ({ ...a, area: a.id })) : [...COMMS].sort((a, b) => b.size - a.size);
+  for (const c of items) {
+    if (area >= 0 && c.area !== area) continue;
+    const lines = c.label.toUpperCase().split(" · ");
+    const w = Math.max(...lines.map((l) => ctx.measureText(l).width)), h = lines.length * 14;
+    const rx = c.x * cam.s + cam.x, y = c.y * cam.s + cam.y;
+    if (rx < -w / 2 || rx > W + w / 2) continue; // off screen: never pin it to the edge
+    const x = Math.max(w / 2 + 6, Math.min(W - w / 2 - 6, rx));
+    const b = [x - w / 2 - 4, y - h / 2 - 3, x + w / 2 + 4, y + h / 2 + 3];
+    if (b[2] < 0 || b[0] > W || b[3] < 0 || b[1] > H || overlaps(b, boxes)) continue;
+    boxes.push(b);
+    lines.forEach((l, k) => haloText(l, x, y - (lines.length - 1) * 7 + k * 14, tierAreas ? T.ink : T.ink2));
+  }
+  ctx.restore();
+  if ("letterSpacing" in ctx) ctx.letterSpacing = "0px";
+}
+function drawNameLabels(boxes, act) {
+  const z = zoomF(), rz = radScale();
+  const forced = [];
+  if (st.sel >= 0) forced.push(st.sel, ...R[st.sel].sim.slice(0, 6).map((s) => s[0]), ...[...co[st.sel].entries()].sort((a, b) => b[1] - a[1]).slice(0, 8).map((e) => e[0]));
+  const ff = findingForced();
+  forced.push(...ff);
+  if (st.hover >= 0) forced.unshift(st.hover);
+  if (st.sel >= 0) forced.unshift(st.sel);
+  const budget = st.sel >= 0 || ff.length ? 0 : Math.min(450, Math.round(10 * z * z));
+  const cand = [...new Set([...forced, ...byCites.slice(0, budget * 3)])];
+  let shown = 0;
+  ctx.textBaseline = "middle";
+  for (const i of cand) {
+    const isForced = forced.includes(i), always = i === st.sel || i === st.hover;
+    if (!isForced && (shown >= budget || (act && !act.has(i)))) continue;
+    const x = sx(i), y = sy(i), r = baseR[i] * rz;
+    if (x < -50 || x > W + 50 || y < -20 || y > H + 20) continue;
+    const big = i === st.sel || i === st.hover;
+    ctx.font = `${big ? 600 : 500} ${big ? 13.5 : 12}px ${T.fUi}`;
+    const t = R[i].name, w = ctx.measureText(t).width, h = big ? 16 : 14;
+    let bx = x + r + 4, b = [bx - 1, y - h / 2, bx + w + 1, y + h / 2];
+    if (b[2] > W - 4 || overlaps(b, boxes)) { bx = x - r - 4 - w; b = [bx - 1, y - h / 2, bx + w + 1, y + h / 2]; if ((overlaps(b, boxes) || b[0] < 4) && !always) continue; }
+    boxes.push(b); ctx.textAlign = "left";
+    haloText(t, bx, y, big ? T.ink : (act && !act.has(i) ? T.muted : T.ink));
+    if (!isForced) shown++;
+  }
+}
+function draw() { if (st.view === "3d") draw3d(); else draw2d(); }
+function draw2d() {
+  if (!W) return;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = T.bg; ctx.fillRect(0, 0, W, H);
+  drawGrid();
+  const act = activeSet();
+  ctx.lineCap = "round";
+  drawEdges(act);
+  const rz = radScale();
+  for (const i of drawOrder) {
+    const x = sx(i), y = sy(i), r = baseR[i] * rz;
+    if (x < -r || x > W + r || y < -r || y > H + r) continue;
+    ctx.globalAlpha = !act || act.has(i) ? 1 : 0.14;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = nodeColor(i); ctx.fill();
+    ctx.lineWidth = 1.2; ctx.strokeStyle = T.bg; ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+  for (const [i, color, w] of [[st.sel, T.ink, 2], [st.hover, T.ink2, 1.5]]) {
+    if (i < 0) continue;
+    ctx.beginPath(); ctx.arc(sx(i), sy(i), baseR[i] * rz + 3, 0, Math.PI * 2);
+    ctx.lineWidth = w; ctx.strokeStyle = color; ctx.stroke();
+  }
+  if (st.view === "findings") drawFindingOverlay();
+  const boxes = [];
+  drawRegionLabels(boxes, act);
+  drawNameLabels(boxes, act);
+}
+
+// ---------- 3D view ----------
+// A separate 3-D UMAP of the same profiles (p3), turned to line up with the flat map. Orbit camera
+// around a pivot: drag rotates, shift/right-drag pans, wheel zooms. Depth shows as size and fading.
+const HAS3D = R.every((r) => Array.isArray(r.p3)) && AREAS.every((a) => Array.isArray(a.p3));
+const P3 = HAS3D ? R.map((r) => r.p3) : [];
+const DIST = 7, NEAR = 0.4; // camera distance from the pivot and near clip, in layout units (cloud RMS radius = 1)
+const cam3 = { yaw: 0.45, pitch: 0.38, s: 1, t: [0, 0, 0] }; // s: pixels per layout unit at the pivot
+let s3 = 1, touched3 = false, anim3 = 0, rot = [1, 0, 0, 0, 1, 0, 0, 0, 1], depthLo = 0, depthSpan = 1;
+const px = new Float32Array(N), py = new Float32Array(N), pd = new Float32Array(N), pk = new Float32Array(N);
+const order3 = [...R.keys()];
+const quant = (arr, q) => { const s = [...arr].sort((a, b) => a - b); return s[Math.min(s.length - 1, Math.floor(q * s.length))] ?? 1; };
+const R3 = HAS3D ? quant(P3.map((p) => Math.hypot(...p)), 0.97) : 1;
+const FLOOR = HAS3D ? (() => { // a faint ground grid under the cloud (layout y points down the screen)
+  const y = Math.max(...P3.map((p) => p[1])) + 0.25, g = Math.ceil(Math.max(...P3.map((p) => Math.max(Math.abs(p[0]), Math.abs(p[2])))) * 2) / 2;
+  return { y, g };
+})() : null;
+const span3 = HAS3D ? Math.max(...[0, 1, 2].map((a) => Math.max(...P3.map((p) => p[a])) - Math.min(...P3.map((p) => p[a])))) : 1;
+const len3 = (i, j) => { const d = Math.hypot(P3[i][0] - P3[j][0], P3[i][1] - P3[j][1], P3[i][2] - P3[j][2]) / span3; return d < 0.12 ? 0 : d < 0.3 ? 1 : 2; };
+const coBuckets3 = [0, 1, 2].map(() => [0, 1, 2].map(() => [])), simBuckets3 = [[], [], []];
+if (HAS3D) {
+  for (const e of D.coauthor) coBuckets3[e[2] >= 15 ? 2 : e[2] >= 4 ? 1 : 0][len3(e[0], e[1])].push(e);
+  for (const e of D.similar) simBuckets3[len3(e[0], e[1])].push(e);
+}
+const DEPTH_FADE = [1, 0.62, 0.34];
+function rotMat() { // pitch about the screen x axis after yaw about the vertical axis
+  const cy = Math.cos(cam3.yaw), sy_ = Math.sin(cam3.yaw), cp = Math.cos(cam3.pitch), sp = Math.sin(cam3.pitch);
+  rot = [cy, 0, sy_, sp * sy_, cp, -sp * cy, -cp * sy_, sp, cp * cy];
+}
+const unrot = (vx, vy, vz) => { rotMat(); const r = rot; return [r[0] * vx + r[3] * vy + r[6] * vz, r[1] * vx + r[4] * vy + r[7] * vz, r[2] * vx + r[5] * vy + r[8] * vz]; };
+const add3 = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const pan3 = (t0, dx, dy) => add3(t0, unrot(-dx / cam3.s, -dy / cam3.s, 0));
+const clampS3 = (s) => Math.max(s3 * 0.4, Math.min(s3 * 30, s));
+const clampPitch = (p) => Math.max(-1.2, Math.min(1.45, p));
+const radScale3 = () => Math.min(2.4, Math.max(0.85, Math.pow(cam3.s / s3, 0.42)));
+function proj(p) { // one layout point -> [screen x, screen y, depth, perspective factor], or null behind the camera
+  const r = rot, x = p[0] - cam3.t[0], y = p[1] - cam3.t[1], z = p[2] - cam3.t[2];
+  const d = DIST + r[6] * x + r[7] * y + r[8] * z;
+  if (d < NEAR) return null;
+  const k = DIST / d;
+  return [W / 2 + (r[0] * x + r[1] * y + r[2] * z) * cam3.s * k, H / 2 + (r[3] * x + r[4] * y + r[5] * z) * cam3.s * k, d, k];
+}
+function project3() {
+  rotMat();
+  let lo = Infinity, hi = -Infinity;
+  for (let i = 0; i < N; i++) {
+    const q = proj(P3[i]);
+    if (!q) { pk[i] = 0; pd[i] = 1e9; continue; }
+    px[i] = q[0]; py[i] = q[1]; pd[i] = q[2]; pk[i] = q[3];
+    if (q[2] < lo) lo = q[2]; if (q[2] > hi) hi = q[2];
+  }
+  depthLo = lo; depthSpan = Math.max(1e-6, hi - lo);
+}
+const fogD = (d) => Math.max(0, Math.min(1, (d - depthLo) / depthSpan)); // 0 nearest .. 1 farthest
+const fog = (i) => fogD(pd[i]);
+function fitScale3() { // the scale at which the cloud (bar a few outliers) stays on screen for a full turn at the current tilt
+  const cp = Math.cos(cam3.pitch), sp = Math.sin(cam3.pitch);
+  let ex = 0, ey = 0;
+  for (let a = 0; a < 24; a++) {
+    const yaw = (a / 24) * Math.PI * 2, cy = Math.cos(yaw), sy_ = Math.sin(yaw), xs = [], ys = [];
+    for (const [x, y, z] of P3) {
+      const k = DIST / (DIST - cp * sy_ * x + sp * y + cp * cy * z);
+      xs.push(Math.abs((cy * x + sy_ * z) * k)); ys.push(Math.abs((sp * sy_ * x + cp * y - sp * cy * z) * k));
+    }
+    ex = Math.max(ex, quant(xs, 0.995)); ey = Math.max(ey, quant(ys, 0.995));
+  }
+  return Math.max(1, Math.min((W / 2 - 28) / ex, (H / 2 - 28) / ey));
+}
+function drawFloor3() {
+  const { y, g } = FLOOR;
+  ctx.beginPath();
+  const seg = (a, b) => { const p = proj(a), q = proj(b); if (p && q) { ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); } };
+  for (let v = -g; v <= g + 1e-9; v += 0.5) { seg([v, y, -g], [v, y, g]); seg([-g, y, v], [g, y, v]); }
+  ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.stroke();
+}
+function drawEdges3(act) {
+  const keep = (i, j) => pk[i] && pk[j] && (!act || (act.has(i) && act.has(j)));
+  const band = (i, j) => { const f = (fog(i) + fog(j)) / 2; return f < 0.34 ? 0 : f < 0.67 ? 1 : 2; };
+  const strokeBins = (buckets, alpha) => {
+    const paths = buckets.map(() => [0, 1, 2].map(() => new Path2D()));
+    buckets.forEach((b, L) => { for (const [i, j] of b) if (keep(i, j)) { const p = paths[L][band(i, j)]; p.moveTo(px[i], py[i]); p.lineTo(px[j], py[j]); } });
+    paths.forEach((row, L) => row.forEach((p, B) => { ctx.strokeStyle = `rgba(${T.edge},${alpha * LEN_FADE[L] * DEPTH_FADE[B]})`; ctx.stroke(p); }));
+  };
+  if (showSim()) { ctx.setLineDash([3, 3]); ctx.lineWidth = 0.7; strokeBins(simBuckets3, act ? 0.10 : 0.2); ctx.setLineDash([]); }
+  if (showCo()) coBuckets3.forEach((byLen, k) => { ctx.lineWidth = [0.6, 1.1, 1.9][k]; strokeBins(byLen, act ? 0.12 : [0.17, 0.26, 0.36][k]); });
+  if (st.sel >= 0 && pk[st.sel]) {
+    const i = st.sel, x = px[i], y = py[i];
+    ctx.beginPath();
+    for (const [j] of R[i].sim) if (pk[j]) { ctx.moveTo(x, y); ctx.lineTo(px[j], py[j]); }
+    ctx.setLineDash([4, 3]); ctx.lineWidth = 1.3; ctx.strokeStyle = T.focus; ctx.stroke(); ctx.setLineDash([]);
+    for (const [j, w] of co[i]) {
+      if (!pk[j]) continue;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(px[j], py[j]);
+      ctx.lineWidth = Math.min(3.2, 0.9 + Math.log2(1 + w) * 0.45); ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.75; ctx.stroke(); ctx.globalAlpha = 1;
+    }
+  }
+}
+function drawRegionLabels3(boxes) {
+  if (st.sel >= 0) return;
+  const z = cam3.s / s3, area = st.hoverArea >= 0 ? st.hoverArea : st.area;
+  const tierAreas = z < 1.7 && area < 0;
+  const alpha = tierAreas ? 1 : Math.max(0, Math.min(1, 2.2 - z * 0.3));
+  if (alpha <= 0.02) return;
+  ctx.save();
+  ctx.font = tierAreas ? `600 12.5px ${T.fLabel}` : `600 11px ${T.fLabel}`;
+  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  if ("letterSpacing" in ctx) ctx.letterSpacing = tierAreas ? "1.6px" : "1.3px";
+  const items = tierAreas ? AREAS.map((a) => ({ ...a, area: a.id })) : [...COMMS].sort((a, b) => b.size - a.size);
+  for (const c of items) {
+    if ((area >= 0 && c.area !== area) || !c.p3) continue;
+    const q = proj(c.p3); if (!q) continue;
+    const lines = c.label.toUpperCase().split(" · ");
+    const w = Math.max(...lines.map((l) => ctx.measureText(l).width)), h = lines.length * 14;
+    const x = q[0], y = q[1];
+    const b = [x - w / 2 - 4, y - h / 2 - 3, x + w / 2 + 4, y + h / 2 + 3];
+    if (b[2] < 0 || b[0] > W || b[3] < 0 || b[1] > H || overlaps(b, boxes)) continue;
+    boxes.push(b);
+    ctx.globalAlpha = alpha * (1 - 0.45 * fogD(q[2]));
+    lines.forEach((l, k) => haloText(l, x, y - (lines.length - 1) * 7 + k * 14, tierAreas ? T.ink : T.ink2));
+  }
+  ctx.restore();
+  if ("letterSpacing" in ctx) ctx.letterSpacing = "0px";
+}
+function drawNameLabels3(boxes, act) {
+  const z = cam3.s / s3, rz = radScale3(), forced = [];
+  if (st.sel >= 0) forced.push(st.sel, ...R[st.sel].sim.slice(0, 6).map((s) => s[0]), ...[...co[st.sel].entries()].sort((a, b) => b[1] - a[1]).slice(0, 8).map((e) => e[0]));
+  if (st.hover >= 0) forced.unshift(st.hover);
+  if (st.sel >= 0) forced.unshift(st.sel);
+  const budget = st.sel >= 0 ? 0 : Math.min(450, Math.round(8 * z * z));
+  const cand = [...new Set([...forced, ...byCites.slice(0, budget * 4)])];
+  let shown = 0;
+  ctx.textBaseline = "middle";
+  for (const i of cand) {
+    if (!pk[i]) continue;
+    const isForced = forced.includes(i), always = i === st.sel || i === st.hover, far = fog(i);
+    if (!isForced && (shown >= budget || far > 0.55 || (act && !act.has(i)))) continue; // only the near side gets unprompted names
+    const x = px[i], y = py[i], r = baseR[i] * rz * pk[i];
+    if (x < -50 || x > W + 50 || y < -20 || y > H + 20) continue;
+    const big = always;
+    ctx.font = `${big ? 600 : 500} ${big ? 13.5 : 12}px ${T.fUi}`;
+    const t = R[i].name, w = ctx.measureText(t).width, h = big ? 16 : 14;
+    let bx = x + r + 4, b = [bx - 1, y - h / 2, bx + w + 1, y + h / 2];
+    if (b[2] > W - 4 || overlaps(b, boxes)) { bx = x - r - 4 - w; b = [bx - 1, y - h / 2, bx + w + 1, y + h / 2]; if ((overlaps(b, boxes) || b[0] < 4) && !always) continue; }
+    boxes.push(b); ctx.textAlign = "left";
+    haloText(t, bx, y, big ? T.ink : act && !act.has(i) ? T.muted : far > 0.5 ? T.ink2 : T.ink);
+    if (!isForced) shown++;
+  }
+}
+function draw3d() {
+  if (!W || !HAS3D) return;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = T.bg; ctx.fillRect(0, 0, W, H);
+  project3();
+  drawFloor3();
+  const act = activeSet();
+  ctx.lineCap = "round";
+  drawEdges3(act);
+  const rz = radScale3();
+  order3.sort((a, b) => pd[b] - pd[a]); // far to near, so near dots cover far ones
+  for (const i of order3) {
+    if (!pk[i]) continue;
+    const x = px[i], y = py[i], r = baseR[i] * rz * pk[i];
+    if (x < -r || x > W + r || y < -r || y > H + r) continue;
+    ctx.globalAlpha = (!act || act.has(i) ? 1 : 0.12) * (1 - 0.6 * fog(i));
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = nodeColor(i); ctx.fill();
+    ctx.lineWidth = 1.2; ctx.strokeStyle = T.bg; ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+  for (const [i, color, w] of [[st.sel, T.ink, 2], [st.hover, T.ink2, 1.5]]) {
+    if (i < 0 || !pk[i]) continue;
+    ctx.beginPath(); ctx.arc(px[i], py[i], baseR[i] * rz * pk[i] + 3, 0, Math.PI * 2);
+    ctx.lineWidth = w; ctx.strokeStyle = color; ctx.stroke();
+  }
+  const boxes = [];
+  drawRegionLabels3(boxes);
+  drawNameLabels3(boxes, act);
+}
+function hit3(mx, my) {
+  const rz = radScale3(); let best = -1, bd = Infinity, bz = Infinity;
+  for (let i = 0; i < N; i++) {
+    if (!pk[i]) continue;
+    const r = baseR[i] * rz * pk[i], d = Math.hypot(px[i] - mx, py[i] - my);
+    if (d > r + 5) continue;
+    if (d <= r) { if (pd[i] < bz) { bz = pd[i]; best = i; bd = -1; } } // inside a dot: the nearest one wins
+    else if (bz === Infinity && d - r < bd) { bd = d - r; best = i; }
+  }
+  return best;
+}
+function fly3(to, animate = true) {
+  cancelAnimationFrame(anim3);
+  if (!animate || reduceMotion) { cam3.s = to.s; cam3.t = to.t.slice(); draw(); return; }
+  const f = { s: cam3.s, t: cam3.t.slice() }, t0 = performance.now(), dur = 600;
+  const step = (now) => {
+    let k = Math.min(1, (now - t0) / dur); k = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+    cam3.s = Math.exp(Math.log(f.s) + (Math.log(to.s) - Math.log(f.s)) * k);
+    cam3.t = f.t.map((v, a) => v + (to.t[a] - v) * k);
+    if (!spinRaf) draw(); // while spinning, the spin loop draws each frame
+    if (k < 1) anim3 = requestAnimationFrame(step);
+  };
+  anim3 = requestAnimationFrame(step);
+}
+function cam3For(idxs, center, minK, maxK, q = 1) { // pivot on `center` (a layout point), zoom so idxs fit
+  const ds = idxs.map((i) => Math.hypot(P3[i][0] - center[0], P3[i][1] - center[1], P3[i][2] - center[2]));
+  const rad = Math.max(0.15, quant(ds, q)), persp = DIST / Math.max(1, DIST - rad);
+  const s = Math.max(s3 * minK, Math.min(s3 * maxK, (Math.min(W, H) / 2 - 60) / (rad * persp)));
+  return { s, t: center.slice() };
+}
+const centroid3 = (idxs) => { const c = [0, 0, 0]; for (const i of idxs) for (let a = 0; a < 3; a++) c[a] += P3[i][a] / idxs.length; return c; };
+const home3 = () => ({ s: s3, t: [0, 0, 0] });
+function zoom3At(mx, my, k) {
+  cancelAnimationFrame(anim3); touched3 = true;
+  const s = clampS3(cam3.s * k); k = s / cam3.s;
+  const u = 1 - 1 / k;
+  cam3.t = add3(cam3.t, unrot(((mx - W / 2) / cam3.s) * u, ((my - H / 2) / cam3.s) * u, 0));
+  cam3.s = s; draw();
+}
+let spinOn = !reduceMotion, spinRaf = 0, spinLast = 0;
+function spinStep(now) {
+  spinRaf = 0;
+  if (st.view !== "3d" || !spinOn) return;
+  const dt = spinLast ? Math.min(64, now - spinLast) : 16; spinLast = now;
+  if (st.hover < 0 && !(drag && moved)) { cam3.yaw -= dt * 0.00015; draw(); } // pauses under the pointer so a tooltip can be read
+  spinRaf = requestAnimationFrame(spinStep);
+}
+function setSpin(on) {
+  spinOn = on; $("#z-spin").setAttribute("aria-pressed", String(on));
+  cancelAnimationFrame(spinRaf); spinRaf = 0; spinLast = 0;
+  if (on && st.view === "3d") spinRaf = requestAnimationFrame(spinStep);
+}
+
+// ---------- hit testing, pointer & wheel ----------
+function hit(mx, my) {
+  if (st.view === "3d") return hit3(mx, my);
+  const rz = radScale(); let best = -1, bd = Infinity;
+  for (let i = 0; i < N; i++) {
+    const r = baseR[i] * rz, d = Math.hypot(sx(i) - mx, sy(i) - my);
+    if (d < r + 5 && d - r < bd) { bd = d - r; best = i; }
+  }
+  return best;
+}
+const tip = $("#tip");
+function showTip(i, x, y) {
+  const r = R[i];
+  tip.innerHTML = `<b>${esc(r.name)}</b><span class="m">${esc(r.inst || "Institution unknown")}</span>
+    <div class="n">${fmt(r.cites)} citations · h-index ${r.h ?? "–"}</div>
+    <div class="n"><span class="sw" style="background:${areaColor(r.a)}"></span> ${esc(AREAS[r.a].label)}</div>${findingTip(i)}`;
+  tip.hidden = false;
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  tip.style.left = Math.min(W - tw - 8, x + 14) + "px";
+  tip.style.top = (y + th + 18 > H ? y - th - 12 : y + 14) + "px";
+}
+const hideTip = () => { tip.hidden = true; };
+const ptrs = new Map(); let drag = null, pinch = null, moved = false;
+const in3d = () => st.view === "3d";
+// one pointer: pan (2D) or rotate (3D; shift, middle or right button pans); two pointers: pinch zoom
+const startDrag = (x, y, pan = false) => ({ x, y, cx: cam.x, cy: cam.y, yaw: cam3.yaw, pitch: cam3.pitch, t: cam3.t.slice(), pan });
+cv.addEventListener("pointerdown", (e) => {
+  cv.setPointerCapture(e.pointerId); cancelAnimationFrame(animId); cancelAnimationFrame(anim3);
+  ptrs.set(e.pointerId, { x: e.offsetX, y: e.offsetY }); moved = false;
+  if (ptrs.size === 1) drag = startDrag(e.offsetX, e.offsetY, e.shiftKey || e.button === 1 || e.button === 2);
+  else if (ptrs.size === 2) {
+    const [a, b] = [...ptrs.values()];
+    pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), s: cam.s, cx: cam.x, cy: cam.y, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2, s3: cam3.s, t: cam3.t.slice() };
+    drag = null;
+  }
+});
+cv.addEventListener("pointermove", (e) => {
+  const p = { x: e.offsetX, y: e.offsetY };
+  if (ptrs.has(e.pointerId)) {
+    ptrs.set(e.pointerId, p);
+    if (pinch && ptrs.size === 2) {
+      const [a, b] = [...ptrs.values()], k = Math.hypot(a.x - b.x, a.y - b.y) / pinch.d, mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      if (in3d()) { cam3.s = clampS3(pinch.s3 * k); cam3.t = pan3(pinch.t, mx - pinch.mx, my - pinch.my); touched3 = true; }
+      else {
+        const s = clampS(pinch.s * k), wx = (pinch.mx - pinch.cx) / pinch.s, wy = (pinch.my - pinch.cy) / pinch.s;
+        cam.s = s; cam.x = mx - wx * s; cam.y = my - wy * s; touched = true;
+      }
+      moved = true; draw(); return;
+    }
+    if (drag) {
+      const dx = p.x - drag.x, dy = p.y - drag.y;
+      if (!moved && Math.abs(dx) + Math.abs(dy) > 4) moved = true;
+      if (moved) {
+        if (!in3d()) { touched = true; cam.x = drag.cx + dx; cam.y = drag.cy + dy; }
+        else if (drag.pan) { touched3 = true; cam3.t = pan3(drag.t, dx, dy); }
+        else { touched3 = true; if (spinOn) setSpin(false); cam3.yaw = drag.yaw - dx * 0.008; cam3.pitch = clampPitch(drag.pitch + dy * 0.008); }
+        cv.style.cursor = "grabbing"; hideTip(); draw();
+      }
+      return;
+    }
+  }
+  if (e.pointerType === "mouse") {
+    const h = hit(p.x, p.y);
+    if (h !== st.hover) { st.hover = h; cv.style.cursor = h >= 0 ? "pointer" : "grab"; draw(); }
+    if (h >= 0) showTip(h, p.x, p.y); else hideTip();
+  }
+});
+function pointerEnd(e) {
+  if (!ptrs.has(e.pointerId)) return;
+  ptrs.delete(e.pointerId);
+  if (ptrs.size < 2) pinch = null;
+  if (ptrs.size === 0) {
+    if (!moved && e.type === "pointerup") select(hit(e.offsetX, e.offsetY));
+    drag = null; cv.style.cursor = st.hover >= 0 ? "pointer" : "grab";
+  } else if (ptrs.size === 1) {
+    const [p] = [...ptrs.values()]; drag = startDrag(p.x, p.y);
+  }
+}
+cv.addEventListener("pointerup", pointerEnd);
+cv.addEventListener("pointercancel", pointerEnd);
+cv.addEventListener("pointerleave", () => { if (st.hover >= 0) { st.hover = -1; draw(); } hideTip(); });
+cv.addEventListener("contextmenu", (e) => { if (in3d()) e.preventDefault(); }); // right-drag pans the 3D view
+const zoomBy = (mx, my, k) => (in3d() ? zoom3At(mx, my, k) : zoomAt(mx, my, k));
+cv.addEventListener("wheel", (e) => { e.preventDefault(); zoomBy(e.offsetX, e.offsetY, Math.exp(-e.deltaY * (e.deltaMode ? 0.05 : 0.0016))); }, { passive: false });
+$("#z-in").onclick = () => zoomBy(W / 2, H / 2, 1.6);
+$("#z-out").onclick = () => zoomBy(W / 2, H / 2, 1 / 1.6);
+$("#z-fit").onclick = () => { if (in3d()) { touched3 = false; fly3(home3()); } else { touched = false; fitAll(true); } };
+$("#z-spin").onclick = () => setSpin(!spinOn);
+
+// ---------- selection ----------
+function select(i, opts = {}) {
+  st.sel = i; st.hover = -1; hideTip();
+  renderPanel();
+  if (i >= 0) announce(`Showing ${R[i].name}`);
+  try {
+    if (i >= 0) { if (location.hash !== "#" + R[i].id) history.replaceState(null, "", "#" + R[i].id); }
+    else if (st.view === "findings") history.replaceState(null, "", "#finding-" + (st.finding + 1));
+    else if (st.view === "3d") { if (location.hash !== "#3d") history.replaceState(null, "", "#3d"); }
+    else if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+  } catch (_) {}
+  if (i >= 0 && opts.fly !== false && st.view !== "table" && W) focusSel(true);
+  else draw();
+  if (st.view === "table") renderTable();
+  if (opts.scrollPanel !== false) $("#panel").scrollTop = 0;
+}
+function focusSel(animate) { // bring the selected researcher and their closest links into view
+  const i = st.sel;
+  const near = [i, ...R[i].sim.slice(0, 6).map((s) => s[0]), ...[...co[i].entries()].sort((a, b) => b[1] - a[1]).slice(0, 6).map((e) => e[0])];
+  if (in3d()) { setSpin(false); touched3 = true; fly3(cam3For(near, P3[i], 1.4, 7), animate); } // orbit around the selected researcher
+  else { touched = true; flyTo(camFor(near, 70, s0 * 1.4, s0 * 7), animate); }
+}
+function focusArea(a) {
+  st.area = st.area === a ? -1 : a;
+  if (st.sel >= 0) st.sel = -1;
+  renderPanel();
+  if (in3d() && W) {
+    touched3 = true;
+    if (st.area >= 0) { const m = [...areaSets[st.area]]; setSpin(false); fly3(cam3For(m, centroid3(m), 1, 6, 0.9)); } else fly3(home3());
+  } else if (st.view !== "table" && W) {
+    touched = true;
+    flyTo(st.area >= 0 ? camFor([...areaSets[st.area]], 40) : camFor([...R.keys()], 36));
+  }
+  if (st.view === "table") renderTable();
+}
+
+// ---------- panel ----------
+const panel = $("#panel");
+function person(i, value, bar) {
+  const r = R[i];
+  return `<li><button data-r="${i}"><span class="sw" style="background:${areaColor(r.a)}"></span>
+    <span class="nm">${esc(r.name)}</span><span class="v">${value}${bar != null ? `<i style="width:${Math.round(bar * 44)}px"></i>` : ""}</span>
+    <span class="in">${esc(r.inst || "")}</span></button></li>`;
+}
+function renderOverview() {
+  const m = D.meta, area = st.area;
+  const areaList = AREAS.map((a) => {
+    const top = a.top.slice(0, 3).map((i) => R[i].name).join(", ");
+    return `<li><button data-area="${a.id}" aria-pressed="${area === a.id}">
+      <span class="sw" style="background:${st.color === "area" ? areaColor(a.id) : "var(--muted)"}"></span>
+      <span class="lb">${esc(a.label)}</span><span class="ct">${fmt(a.size)}</span>
+      <span class="who">${esc(top)}</span></button></li>`;
+  }).join("");
+  panel.innerHTML = `<div class="pane">
+    <div><p class="eyebrow">${fmt(m.n)} researchers · ${AREAS.length} research areas</p>
+    <h2>Who works on what, among the most-cited names in CS and robotics</h2></div>
+    <p>Each dot is a researcher. People who publish on similar subjects sit close together; dot size shows total citations. Click a dot or search a name to see their papers, nearest neighbours and co-authors.</p>
+    ${F ? `<button class="cta" data-open-findings><b>5 findings from this graph →</b><span>Whether CS areas are converging, the spread of LLMs, robotics, collaboration and one-paper careers, with charts.</span></button>` : ""}
+    ${BX ? `<button class="cta" data-view="beyond"><b>Beyond computer science →</b><span>Are biology, physics, medicine, the social sciences and the humanities moving toward AI too? ${BX.fields.filter((f) => f.id !== "17").length} fields compared, and whether top-cited papers are a fair measure.</span></button>` : ""}
+    <button class="cta" data-view="methods"><b>Methods and metrics →</b><span>How every number on these pages is measured.</span></button>
+    <div class="figs">
+      <div><b>${fmt(m.n)}</b><span>researchers</span></div>
+      <div><b>${fmt(m.n_papers)}</b><span>papers embedded</span></div>
+      <div><b>${fmt(m.n_coauthor)}</b><span>co-author links</span></div>
+      <div><b>${fmt(m.n_communities)}</b><span>communities</span></div>
+    </div>
+    ${st.color === "rob" ? `<div class="sect"><h3>Robotics share of research topics</h3>
+      <div class="ramp"><div class="bar-g"></div><div class="ends"><span>0%</span><span>45%</span><span>90%+</span></div></div></div>` : ""}
+    <div class="sect"><h3>Research areas <em>${area >= 0 ? "click again to show all" : "click to focus"}</em></h3><ul class="areas">${areaList}</ul></div>
+    <div class="sect"><h3>Lines</h3><div class="lines-key">
+      <div><i></i>Co-authors: wrote papers together (thicker = more joint papers)</div>
+      <div><i class="dash"></i>Similar work: among each other's ${m.k_shown} nearest research profiles (a selected researcher's are shown in blue)</div></div></div>
+    <details><summary>How this map was made</summary><ul>
+      <li>Researchers: the ${fmt(m.n)} most-cited OpenAlex authors whose topics are at least half computer science or robotics (${fmt(m.min_cites)} to ${fmt(m.max_cites)} citations).</li>
+      <li>Research profile: each person's ${m.works_per} most-cited papers (title and abstract) embedded with SPECTER2, averaged with log-citation weights, then centred on the group mean.</li>
+      <li>Position: UMAP projection of the 768-dimensional profiles to 2-D. Distance on the map approximates similarity of research, not geography.</li>
+      ${HAS3D ? `<li>3D view: a separate UMAP of the same profiles to 3-D (same settings), turned to line up with the flat map. Nearer dots are larger and stronger; the grid is only a floor for orientation.</li>` : ""}
+      <li>Communities: k-means clusters of the profiles (${fmt(m.n_communities)}, the count with the best silhouette), grouped into ${AREAS.length} colour-coded areas and named by their most over-represented OpenAlex subfields and topics. Robotics-heavy communities always keep their own area.</li>
+      <li>Similar work: each researcher's ${m.k} nearest profiles by cosine similarity (the map draws the closest ${m.k_shown}).</li>
+      <li>Co-author links count joint works across each person's full OpenAlex record.</li>
+    </ul></details>
+    <p class="foot">Data: OpenAlex, retrieved ${esc(m.retrieved || m.generated)}. Profiles can contain disambiguation errors from the source.</p>
+  </div>`;
+}
+function sparkline(r) {
+  const pts = r.cby.filter(([y]) => y <= D.meta.last_full_year);
+  if (pts.length < 2) return "";
+  const w = 300, h = 60, maxV = Math.max(...pts.map((p) => p[1])) || 1;
+  const X = (k) => 4 + (k / (pts.length - 1)) * (w - 8), Y = (v) => h - 4 - (v / maxV) * (h - 12);
+  const line = pts.map((p, k) => `${k ? "L" : "M"}${X(k).toFixed(1)},${Y(p[1]).toFixed(1)}`).join("");
+  const last = pts[pts.length - 1], color = areaColor(r.a);
+  return `<div class="sect spark" data-spark="${R.indexOf(r)}"><h3>Citations per year <em>${pts[0][0]}–${last[0]}</em></h3>
+    <svg viewBox="0 0 ${w} ${h + 14}" preserveAspectRatio="none" role="img" aria-label="Citations per year, ${pts[0][0]} to ${last[0]}, peak ${fmt(maxV)}">
+      <line x1="0" x2="${w}" y1="${h - 4}" y2="${h - 4}" stroke="var(--line)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+      <path d="${line}L${X(pts.length - 1)},${h - 4}L${X(0)},${h - 4}Z" fill="${color}" opacity=".14"/>
+      <path d="${line}" fill="none" stroke="${color}" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+      <circle cx="${X(pts.length - 1)}" cy="${Y(last[1])}" r="3.2" fill="${color}" stroke="var(--surface)" stroke-width="1.5"/>
+      <line class="cross" x1="0" x2="0" y1="0" y2="${h - 4}" stroke="var(--muted)" stroke-width="1" vector-effect="non-scaling-stroke" visibility="hidden"/>
+    </svg>
+    <div class="read">${last[0]}: ${fmt(last[1])} citations · peak ${fmt(maxV)}</div></div>`;
+}
+function renderDetail(i) {
+  const r = R[i], area = AREAS[r.a], comm = COMMS[r.c];
+  const coList = [...co[i].entries()].sort((a, b) => b[1] - a[1]);
+  const simMax = Math.max(...r.sim.map((s) => s[1])), simMin = Math.min(...r.sim.map((s) => s[1]));
+  const scholar = "https://scholar.google.com/citations?view_op=search_authors&mauthors=" + encodeURIComponent(r.name);
+  panel.innerHTML = `<div class="pane">
+    <button class="back" data-back>${st.view === "findings" ? `← Back to finding ${st.finding + 1}` : "← All research areas"}</button>
+    <div class="who-h">
+      <p class="eyebrow">Rank ${r.rank} of ${fmt(N)} by citations</p>
+      <h2>${esc(r.name)}</h2>
+      <div class="inst">${esc(r.inst || "Institution unknown")}${r.cc ? " · " + esc(r.cc) : ""}</div>
+      <dl class="kv"><dt>Area</dt><dd><span class="sw" style="background:${areaColor(r.a)}"></span>${esc(area.label)}</dd>
+        <dt>Community</dt><dd>${esc(comm.label)}</dd></dl>
+    </div>
+    <div class="figs">
+      <div><b>${fmt(r.cites)}</b><span>citations</span></div>
+      <div><b>${r.h ?? "–"}</b><span>h-index</span></div>
+      <div><b>${fmt(r.works)}</b><span>works</span></div>
+      <div><b>${co[i].size}</b><span>co-authors here</span></div>
+    </div>
+    ${sparkline(r)}
+    <div class="sect"><h3>Robotics share of topics <em>${Math.round(r.rob * 100)}%</em></h3><div class="meter"><i style="width:${Math.round(r.rob * 100)}%"></i></div></div>
+    <div class="sect"><h3>Main research topics</h3><div class="chips">${r.topics.map((t) => `<span>${esc(t)}</span>`).join("")}</div></div>
+    <div class="sect"><h3>Most-cited papers</h3><ol class="papers">${r.papers.map((p) => `<li><a href="${esc(safeUrl(p[3]))}" target="_blank" rel="noopener">${esc(p[0])}</a><span class="m">${p[1] || ""} · ${fmt(p[2])} citations</span></li>`).join("")}</ol></div>
+    <div class="sect"><h3>Most similar research <em>cosine</em></h3><ul class="people">${r.sim.map(([j, s]) => person(j, s.toFixed(2), (s - simMin) / ((simMax - simMin) || 1) * 0.8 + 0.2)).join("")}</ul></div>
+    <div class="sect"><h3>Co-authors in this atlas <em>joint works</em></h3>${coList.length
+      ? `<ul class="people" id="co-list">${coList.slice(0, 12).map(([j, w]) => person(j, fmt(w))).join("")}</ul>${coList.length > 12 ? `<button class="more" data-more>Show all ${coList.length}</button>` : ""}`
+      : `<p>No co-authors among the other ${fmt(N - 1)} researchers.</p>`}</div>
+    <div class="sect"><h3>Profiles</h3><div class="links">
+      <a href="https://openalex.org/${esc(r.id)}" target="_blank" rel="noopener">OpenAlex ↗</a>
+      ${r.orcid && safeUrl(r.orcid) !== "#" ? `<a href="${esc(r.orcid)}" target="_blank" rel="noopener">ORCID ↗</a>` : ""}
+      <a href="${scholar}" target="_blank" rel="noopener">Google Scholar search ↗</a></div></div>
+  </div>`;
+  const sp = panel.querySelector(".spark");
+  if (sp) wireSpark(sp, r);
+  const more = panel.querySelector("[data-more]");
+  if (more) more.onclick = () => { $("#co-list").innerHTML = coList.map(([j, w]) => person(j, fmt(w))).join(""); more.remove(); };
+}
+function wireSpark(sp, r) {
+  const pts = r.cby.filter(([y]) => y <= D.meta.last_full_year), svg = sp.querySelector("svg"), cross = sp.querySelector(".cross"), read = sp.querySelector(".read");
+  const def = read.textContent;
+  svg.addEventListener("pointermove", (e) => {
+    const b = svg.getBoundingClientRect(), k = Math.round(((e.clientX - b.left) / b.width) * (pts.length - 1));
+    const p = pts[Math.max(0, Math.min(pts.length - 1, k))], x = 4 + (pts.indexOf(p) / (pts.length - 1)) * 292;
+    cross.setAttribute("x1", x); cross.setAttribute("x2", x); cross.setAttribute("visibility", "visible");
+    read.textContent = `${p[0]}: ${fmt(p[1])} citations`;
+  });
+  svg.addEventListener("pointerleave", () => { cross.setAttribute("visibility", "hidden"); read.textContent = def; });
+}
+// ---------- findings ----------
+const F = D.findings || null;
+const pct = (v, d = 0) => (v * 100).toFixed(d) + "%";
+const sgn = (v, d = 3) => (v >= 0 ? "+" : "−") + Math.abs(v).toFixed(d);
+const sgnPct = (v) => (v >= 0 ? "+" : "−") + Math.abs(v * 100).toFixed(0) + "%";
+const llmOf = Array(N).fill(null), topOf = Array(N).fill(null), shiftAI = Array(N).fill(null), shiftRL = Array(N).fill(null), ratioOf = {};
+const oneSet = new Set();
+let robRlSet = new Set();
+const ROLE = { ai: -1, rl: -1, rob: -1 };
+if (F) {
+  const c = F.convergence;
+  for (const k in F.llm.share) llmOf[+k] = F.llm.share[k];
+  for (const k in F.onepaper.share) { topOf[+k] = F.onepaper.share[k]; if (topOf[+k][0] >= 0.5) oneSet.add(+k); }
+  for (const r of F.collab.communities) ratioOf[r.community] = r;
+  for (const k in c.shift_ai || {}) shiftAI[+k] = c.shift_ai[k];
+  for (const k in c.shift_rl || {}) shiftRL[+k] = c.shift_rl[k];
+  const role = (a) => (a != null && AREAS[a] ? a : -1); // areas are identified by role in the data, never by label
+  ROLE.ai = role(c.ai_area); ROLE.rl = role(c.rl_area); ROLE.rob = role(c.robotics_area);
+  robRlSet = new Set([...(ROLE.rob >= 0 ? areaSets[ROLE.rob] : []), ...(ROLE.rl >= 0 ? areaSets[ROLE.rl] : [])]);
+}
+const areaName = (a) => (a >= 0 && AREAS[a] ? AREAS[a].label : "");
+const listNames = (rows) => rows.map((r) => esc(areaName(r.area))).join(", ").replace(/, ([^,]*)$/, " and $1");
+const q95 = (arr) => { const v = arr.filter((x) => x != null).map(Math.abs).sort((a, b) => a - b); return (v.length && v[Math.floor(v.length * 0.95)]) || 0.1; };
+const SCALE_AI = q95(shiftAI), SCALE_RL = q95(shiftRL);
+const showSim = () => st.view !== "findings" && st.sim;
+const showCo = () => (st.view === "findings" ? !!F && st.finding === 3 : st.co);
+function divColor(t) { // t in ±1.2: negative -> red end, positive -> blue end, 0 -> neutral grey
+  const u = Math.max(-1, Math.min(1, t / 1.2)), b = u < 0 ? T.neg : T.pos, k = Math.abs(u);
+  return "rgb(" + T.mid.map((v, j) => Math.round(v + (b[j] - v) * k)).join(",") + ")";
+}
+function findingColor(i) {
+  if (st.finding === 0) { const d = shiftAI[i]; return d == null ? T.none : divColor((d / SCALE_AI) * 1.2); }
+  if (st.finding === 1) { const v = llmOf[i]; return v ? seq(Math.min(1, v[0] / 0.6)) : T.none; }
+  if (st.finding === 2) {
+    if (R[i].a !== ROLE.rob) return areaColor(R[i].a);
+    const d = shiftRL[i]; return d == null ? T.none : divColor((d / SCALE_RL) * 1.2);
+  }
+  if (st.finding === 3) { const c = ratioOf[R[i].c]; return c ? divColor(Math.log2(c.ratio)) : T.none; }
+  if (st.finding === 4) {
+    const on = st.cohort >= 0 ? F.onepaper.cohorts[st.cohort].members.includes(i) : oneSet.has(i);
+    return on ? T.focus : T.none;
+  }
+  return areaColor(R[i].a);
+}
+function drawFindingOverlay() {
+  if (!F || st.sel >= 0 || st.finding !== 3) return;
+  ctx.setLineDash([5, 4]); ctx.lineWidth = 1.6; ctx.strokeStyle = T.ink;
+  for (const [i, j] of F.collab.twins) { ctx.beginPath(); ctx.moveTo(sx(i), sy(i)); ctx.lineTo(sx(j), sy(j)); ctx.stroke(); }
+  ctx.setLineDash([]);
+}
+function robPeople() { // people sorted by shift: those who moved toward it, and those most away
+  const p = (F && F.robotics && F.robotics.people) || [];
+  return { most: p.filter(([, d]) => d > 0).slice(0, 6), least: p.filter(([, d]) => d < 0).slice(-4).reverse() };
+}
+function findingForced() {
+  if (!F || st.view !== "findings" || st.sel >= 0) return [];
+  if (st.finding === 2) { const { most, least } = robPeople(); return [...most.slice(0, 5), ...least.slice(0, 3)].map((x) => x[0]); }
+  if (st.finding === 3) return [...new Set(F.collab.twins.flatMap(([i, j]) => [i, j]))];
+  if (st.finding === 4 && st.cohort >= 0) return F.onepaper.cohorts[st.cohort].members;
+  return [];
+}
+function findingTip(i) {
+  if (!F || st.view !== "findings") return "";
+  const rel = (d, what) => `${d >= 0 ? "Moved toward" : "Moved away from"} ${what}, relative to the average researcher (${sgn(d)})`;
+  let t = "";
+  if (st.finding === 0) t = shiftAI[i] != null ? rel(shiftAI[i], `the ${areaName(ROLE.ai)} area`) : "Too few papers in one of the periods";
+  else if (st.finding === 1) { const v = llmOf[i]; t = v ? `${pct(v[0])} of ${v[1]} top papers since 2022 mention LLMs` : "No papers since 2022"; }
+  else if (st.finding === 2 && R[i].a === ROLE.rob) t = shiftRL[i] != null ? rel(shiftRL[i], `the ${areaName(ROLE.rl)} area`) : "Too few papers in one of the periods";
+  else if (st.finding === 3) { const c = ratioOf[R[i].c]; t = c ? `Community co-authors ${c.ratio.toFixed(2)}× what similarity predicts` : ""; }
+  else if (st.finding === 4) { const v = topOf[i]; t = v ? `${pct(v[0])} of citations from “${v[1]}”` : ""; }
+  return t ? `<div class="n">${esc(t)}</div>` : "";
+}
+
+// SVG charts: one accent; identity carried by text labels and swatches. Every mark with a value
+// can be reached by hover, tap or Tab (role=img with the same text as its tooltip).
+const CW = 340;
+const trunc = (s, n) => (s.length > n ? s.slice(0, n - 1) + "…" : s);
+const markAttrs = (r) => `${r.area != null ? ` data-area="${r.area}"` : ""}${r.field != null ? ` data-field="${r.field}"` : ""}` +
+  (r.tip ? ` data-tip="${esc(r.tip)}" tabindex="0" role="img" aria-label="${esc(r.tip)}"` : "");
+function axisTicks(lo, hi, n = 4) {
+  const step = (hi - lo) / n, mag = Math.pow(10, Math.floor(Math.log10(step))), nice = [1, 2, 2.5, 5, 10].map((k) => k * mag).find((k) => k >= step) || step;
+  const out = [];
+  for (let t = Math.ceil(lo / nice) * nice; t <= hi + 1e-12; t += nice) out.push(+t.toFixed(10));
+  return out;
+}
+function hbars(rows, o = {}) {
+  const CW = o.w || 340, rowH = 31, room = CW - 66;
+  const max = Math.max(o.max || 0, ...rows.map((r) => Math.abs(r.value))) || 1; // a bar can never overflow
+  const body = rows.map((r, k) => {
+    const y = k * rowH, w = Math.max(3, (Math.abs(r.value) / max) * room), lx = r.sw ? 14 : 0;
+    return `<g class="row"${markAttrs(r)}>
+      <rect x="0" y="${y}" width="${CW}" height="${rowH}" class="hit"/>
+      ${r.sw ? `<circle cx="4.5" cy="${y + 8}" r="4" style="fill:${r.sw}"/>` : ""}
+      <text x="${lx}" y="${y + 12}" class="cl">${esc(trunc(r.label, o.w ? 96 : 52))}</text>
+      <rect x="0" y="${y + 17}" width="${w.toFixed(1)}" height="8" rx="4" class="bar${r.hl ? " hl" : ""}"/>
+      <text x="${(w + 6).toFixed(1)}" y="${y + 25}" class="cv">${esc(o.fmt ? o.fmt(r.value) : r.value)}</text></g>`;
+  }).join("");
+  return `<svg class="chart" viewBox="0 0 ${CW} ${rows.length * rowH}" role="group" aria-label="${esc(o.aria || "")}">${body}</svg>`;
+}
+function dumbbell(rows, o) {
+  const CW = o.w || 340, rowH = 31, pad = 8, right = 54;
+  const vals = rows.flatMap((r) => [r.a, r.b]).concat(o.ref != null ? [o.ref] : []);
+  let lo = Math.min(...vals), hi = Math.max(...vals);
+  const span = hi - lo || Math.abs(hi) || 1;
+  lo -= span * 0.06; hi += span * 0.06;
+  if (o.floor != null) lo = Math.max(o.floor, lo);
+  const X = (v) => pad + ((v - lo) / (hi - lo)) * (CW - pad - right);
+  const H = rows.length * rowH + 16;
+  let s = `<svg class="chart" viewBox="0 0 ${CW} ${H}" role="group" aria-label="${esc(o.aria || "")}">`;
+  if (o.ref != null) s += `<line x1="${X(o.ref)}" x2="${X(o.ref)}" y1="14" y2="${rows.length * rowH}" class="refl"/>`;
+  rows.forEach((r, k) => {
+    const y = k * rowH, yy = y + 22, xa = X(r.a), xb = X(r.b), up = xb >= xa;
+    s += `<g class="row"${markAttrs(r)}>
+      <rect x="0" y="${y}" width="${CW}" height="${rowH}" class="hit"/>
+      ${r.sw ? `<circle cx="4.5" cy="${y + 8}" r="4" style="fill:${r.sw}"/>` : ""}
+      <text x="${r.sw ? 14 : 0}" y="${y + 12}" class="cl">${esc(trunc(r.label, o.w ? 96 : 52))}</text>
+      <line x1="${xa}" x2="${xb}" y1="${yy}" y2="${yy}" class="dl"/>
+      <circle cx="${xa}" cy="${yy}" r="4" class="da"/><circle cx="${xb}" cy="${yy}" r="4.5" class="db"/>
+      <text x="${up ? xb + 9 : xb - 9}" y="${yy + 4}" class="cv" text-anchor="${up ? "start" : "end"}">${esc(o.fmt(r.b))}</text></g>`;
+  });
+  s += axisTicks(lo, hi).map((t) => `<text x="${X(t)}" y="${H - 2}" class="ax" text-anchor="middle">${esc(o.tfmt ? o.tfmt(t) : t)}</text>`).join("");
+  return s + "</svg>";
+}
+function dbars(rows, o = {}) { // diverging bars around 0 with optional 95% interval whiskers
+  const CW = o.w || 340, rowH = 31, pad = 4, right = 58;
+  const ext = 1.08 * Math.max(...rows.flatMap((r) => [Math.abs(r.value), ...(r.ci ? r.ci.map(Math.abs) : [])])) || 1;
+  const X = (v) => pad + ((v + ext) / (2 * ext)) * (CW - pad - right), x0 = X(0);
+  const H = rows.length * rowH + 16;
+  let s = `<svg class="chart" viewBox="0 0 ${CW} ${H}" role="group" aria-label="${esc(o.aria || "")}">
+    <line x1="${x0}" x2="${x0}" y1="14" y2="${rows.length * rowH}" class="refl"/>`;
+  rows.forEach((r, k) => {
+    const y = k * rowH, yy = y + 21, xv = X(r.value);
+    s += `<g class="row"${markAttrs(r)}>
+      <rect x="0" y="${y}" width="${CW}" height="${rowH}" class="hit"/>
+      ${r.sw ? `<circle cx="4.5" cy="${y + 8}" r="4" style="fill:${r.sw}"/>` : ""}
+      <text x="${r.sw ? 14 : 0}" y="${y + 12}" class="cl">${esc(trunc(r.label, o.w ? 96 : 50))}</text>
+      <rect x="${Math.min(x0, xv).toFixed(1)}" y="${yy - 4}" width="${Math.max(2, Math.abs(xv - x0)).toFixed(1)}" height="8" rx="3" class="bar${r.hl ? " hl" : ""}"/>
+      ${r.ci ? `<line x1="${X(r.ci[0])}" x2="${X(r.ci[1])}" y1="${yy}" y2="${yy}" class="ci"/><line x1="${X(r.ci[0])}" x2="${X(r.ci[0])}" y1="${yy - 4}" y2="${yy + 4}" class="ci"/><line x1="${X(r.ci[1])}" x2="${X(r.ci[1])}" y1="${yy - 4}" y2="${yy + 4}" class="ci"/>` : ""}
+      <text x="${CW - right + 8}" y="${yy + 4}" class="cv">${esc(o.fmt ? o.fmt(r.value) : r.value)}</text></g>`;
+  });
+  s += `<text x="${pad}" y="${H - 2}" class="ax">${esc(o.left || "")}</text>
+    <text x="${x0}" y="${H - 2}" class="ax" text-anchor="middle">0</text>
+    <text x="${CW - right}" y="${H - 2}" class="ax" text-anchor="end">${esc(o.right || "")}</text>`;
+  return s + "</svg>";
+}
+function linechart(pts, o) { // a trailing partial year is drawn faint with a hollow marker
+  const H = 124, padL = 6, padR = 46, padT = 18, padB = 22, max = Math.max(...pts.map((p) => p.v)) * 1.12 || 1;
+  const X = (k) => padL + (k / Math.max(1, pts.length - 1)) * (CW - padL - padR), Y = (v) => padT + (1 - v / max) * (H - padT - padB);
+  const full = pts.length && pts[pts.length - 1].partial ? pts.length - 1 : pts.length, base = H - padB;
+  const path = (a, b) => pts.slice(a, b).map((p, k) => `${k ? "L" : "M"}${X(a + k).toFixed(1)},${Y(p.v).toFixed(1)}`).join("");
+  const lastFull = full - 1, peak = pts.slice(0, full).reduce((m, p, k) => (p.v > pts[m].v ? k : m), 0);
+  let s = `<svg class="chart" viewBox="0 0 ${CW} ${H}" role="group" aria-label="${esc(o.aria)}">
+    <line x1="0" x2="${CW - padR + 10}" y1="${base}" y2="${base}" class="basel"/>
+    <path d="${path(0, full)}L${X(lastFull)},${base}L${X(0)},${base}Z" class="area"/><path d="${path(0, full)}" class="ln"/>`;
+  if (full < pts.length) s += `<path d="${path(full - 1, pts.length)}" class="ln part"/>`;
+  pts.forEach((p, k) => {
+    s += `<g${markAttrs({ tip: p.tip })}><circle cx="${X(k)}" cy="${Y(p.v)}" r="15" class="hit"/>
+      <circle cx="${X(k)}" cy="${Y(p.v)}" r="${k >= full ? 3.2 : k === lastFull || k === peak ? 4 : 2.6}" class="${k >= full ? "pend" : "pt"}"/></g>
+      <text x="${X(k)}" y="${H - 5}" class="ax" text-anchor="middle">${esc(p.label)}</text>`;
+  });
+  for (const k of new Set([0, peak, lastFull])) {
+    const right = k === lastFull && full === pts.length;
+    s += `<text x="${right ? X(k) + 9 : X(k)}" y="${right ? Y(pts[k].v) + 4 : Y(pts[k].v) - 9}" class="cv" text-anchor="${right ? "start" : "middle"}">${esc(o.fmt(pts[k].v))}</text>`;
+  }
+  if (full < pts.length) { const k = pts.length - 1; s += `<text x="${X(k) + 7}" y="${Y(pts[k].v) + 4}" class="ax">${esc(o.fmt(pts[k].v))}*</text>`; }
+  return s + "</svg>";
+}
+function columns(vals, o) {
+  const H = 118, padT = 18, padB = 22, gap = 5, n = vals.length, bw = (CW - gap * (n - 1)) / n, max = Math.max(...vals.map((v) => v.v)) || 1;
+  let s = `<svg class="chart" viewBox="0 0 ${CW} ${H}" role="group" aria-label="${esc(o.aria)}">`;
+  vals.forEach((v, k) => {
+    const h = Math.max(2, (v.v / max) * (H - padT - padB)), x = k * (bw + gap), y = H - padB - h, r = Math.min(3, h / 2);
+    s += `<g class="row"${markAttrs({ tip: v.tip })}><rect x="${x}" y="0" width="${bw}" height="${H - padB}" class="hit"/>
+      <path d="M${x},${H - padB}V${y + r}q0,-${r} ${r},-${r}h${bw - 2 * r}q${r},0 ${r},${r}V${H - padB}Z" class="bar${k === n - 1 ? " hl" : ""}"/></g>`;
+  });
+  const lab = (k) => `<text x="${k * (bw + gap) + bw / 2}" y="${H - padB - Math.max(2, (vals[k].v / max) * (H - padT - padB)) - 5}" class="cv" text-anchor="middle">${esc(o.fmt(vals[k].v))}</text>`;
+  s += lab(0) + lab(n - 1);
+  s += `<line x1="0" x2="${CW}" y1="${H - padB}" y2="${H - padB}" class="basel"/>
+    <text x="0" y="${H - 5}" class="ax">${esc(o.left)}</text><text x="${CW}" y="${H - 5}" class="ax" text-anchor="end">${esc(o.right)}</text>`;
+  return s + "</svg>";
+}
+const swatch = (a) => areaColor(a);
+const method = (html) => `<details class="method"><summary>How this was measured</summary>${html}</details>`;
+const divLegend = (l, m, r) => `<div class="ramp"><div class="bar-d"></div><div class="ends"><span>${l}</span><span>${m}</span><span>${r}</span></div></div>`;
+
+function changeStats() {
+  const c = F.convergence, fair = c.distinct.filter((d) => d.fair);
+  const fmin = Math.min(...fair.map((d) => (d.change_min != null ? d.change_min : d.change)));
+  const fmax = Math.max(...fair.map((d) => (d.change_max != null ? d.change_max : d.change)));
+  const rows = c.toward_ai || [];
+  return { c, fair, fmin, fmax, toward: rows.filter((r) => r.ci[0] > 0), away: rows.filter((r) => r.ci[1] < 0) };
+}
+function robStats() {
+  const c = F.convergence, rl = (c.toward_rl || []).find((r) => r.area === ROLE.rob), ai = (c.toward_ai || []).find((r) => r.area === ROLE.rob);
+  return { rl, ai, llm: F.llm.by_area.find((r) => r.area === ROLE.rob) };
+}
+function collabStats() {
+  const Cb = F.collab, h = Cb.homophily, big = Cb.communities.filter((c) => c.ratio >= 1.5).sort((a, b) => b.ratio - a.ratio);
+  const labs = big.filter((c) => c.ratio_org < 0.8 * c.ratio && c.same_org > 3 * Cb.same_org_overall);
+  return { Cb, ratio: h[9].p / h[0].p, big, labs, other: big.filter((c) => !labs.includes(c)) };
+}
+let FTITLES = [];
+function makeTitles() {
+  const S = changeStats(), Rb = robStats(), Co = collabStats(), O = F.onepaper;
+  const robTitle = !Rb.rl ? "Robotics compared with the rest of CS"
+    : Rb.rl.ci[1] < 0 ? `Robotics moved away from ${areaName(ROLE.rl).toLowerCase()}, relative to the rest of CS`
+      : Rb.rl.ci[0] > 0 ? `Robotics moved toward ${areaName(ROLE.rl).toLowerCase()}, relative to the rest of CS`
+        : "Robotics moved like the rest of CS";
+  return [
+    S.fmin > 0 ? "Computer science areas are not converging" : S.fmax < 0 ? "Computer science areas are converging" : "No clear convergence of computer science areas",
+    `LLM papers reached ${pct(F.llm.researchers_all)} of these researchers since 2022`,
+    robTitle,
+    Co.labs.length ? "Similar researchers co-author far more, and big labs add to it" : "Similar researchers co-author far more often",
+    `${pct(O.count50 / N)} of these researchers owe half their citations to one paper`,
+  ];
+}
+const commLabel = (c) => esc(COMMS[c.community].label);
+
+function fChange() {
+  const S = changeStats(), c = S.c;
+  const verdict = S.fmin > 0 ? "more distinct" : S.fmax < 0 ? "less distinct" : "about as distinct";
+  return `<p class="lead">Comparing each researcher's most-cited papers up to 2016 with those since 2022, CS areas are <b>${verdict}</b> than before (${sgnPct(S.fmin)} to ${sgnPct(S.fmax)}) once the comparison is made fairly.${S.toward.length ? ` Relative to the average researcher, only ${listNames(S.toward)} moved measurably toward the ${esc(areaName(ROLE.ai))} area${S.away.length ? `; ${listNames(S.away)} moved away from it` : ""}.` : ""}</p>
+  <p class="note">An earlier version of this finding said the opposite (areas 22% less distinct). That was an artefact: the areas were defined from profiles built mostly from pre-2016 papers, so the past looked more distinct by construction.</p>
+  <div class="sect"><h3>How the answer depends on the method <em>change in distinctness</em></h3>
+    ${dbars(c.distinct.map((d) => ({ label: `${d.fair ? "" : "Biased: "}${d.method}`, value: d.change, hl: d.fair,
+      ci: d.change_min != null ? [d.change_min, d.change_max] : null,
+      tip: `${d.method}: same-area minus cross-area similarity ${d.then.toFixed(3)} → ${d.now.toFixed(3)} (${sgnPct(d.change)}${d.change_min != null ? `; seeds ${sgnPct(d.change_min)} to ${sgnPct(d.change_max)}` : ""})` })),
+      { fmt: sgnPct, left: "less distinct", right: "more distinct", aria: "Change in how distinct CS areas are, by method" })}
+    <p class="note">Highlighted rows are the fair test: areas taken from 2017–21 papers, which belong to neither period, and each period centred on its own mean so the shift everyone shares cannot squeeze the differences. Whiskers span three random seeds.</p></div>
+  ${c.toward_ai ? `<div class="sect"><h3>Shift toward the ${esc(areaName(ROLE.ai))} area <em>relative to the average researcher</em></h3>
+    ${dbars([...c.toward_ai].sort((a, b) => b.value - a.value).map((r) => ({ label: `${trunc(areaName(r.area), 40)} (${r.n})`, sw: swatch(r.area), area: r.area, value: r.value, ci: r.ci,
+      hl: r.ci[0] > 0 || r.ci[1] < 0, tip: `${areaName(r.area)}, ${r.n} researchers: ${sgn(r.value)} (95% interval ${sgn(r.ci[0])} to ${sgn(r.ci[1])})` })),
+      { fmt: (v) => sgn(v), left: "away", right: "toward", aria: "Shift toward the AI area by area, relative to the average researcher" })}
+    <p class="note">0 means the area moved like the average researcher. Whiskers are 95% bootstrap intervals; highlighted bars exclude 0.</p></div>` : ""}
+  <div class="sect"><h3>On the map</h3>
+    ${divLegend("away from AI", "average", "toward AI")}
+    <div class="lgd"><span><i class="dot" style="background:var(--none)"></i>Too few papers in one of the periods</span></div></div>
+  ${method(`<p>For the ${fmt(c.n)} researchers with at least ${c.k} top papers up to 2016, ${c.k} since 2022 and 5 from 2017–21: each period is summarised by equal random samples of ${c.k} papers (SPECTER2 vectors, averaged over 10 samples) and centred on its own mean. Distinctness = mean similarity of same-area pairs minus mean similarity of cross-area pairs. Shift toward an area = similarity to that area's 2017–21 centre since 2022 minus up to 2016, minus the average over everyone.</p>`)}`;
+}
+function fLLM() {
+  const L = F.llm, rows = [...L.by_area].sort((a, b) => b.researchers - a.researchers), P = L.cs_population || [];
+  const full = P.filter((p) => !p.partial), part = P.find((p) => p.partial), first = full.find((p) => p.share > 0) || full[0], last = full[full.length - 1];
+  return `<p class="lead"><b>${pct(L.researchers_all)}</b> of the ${fmt(L.n_all)} researchers who published since 2022 have at least one LLM or foundation-model paper among their ${L.per_researcher} most-cited recent papers.${last ? ` Across all computer-science papers, LLM papers went from ${pp(first.share)} in ${first.year} to <b>${pp(last.share)}</b> in ${last.year}${part ? ` and ${pp(part.share)} so far in ${part.year}` : ""}.` : ""}</p>
+  ${P.length ? `<div class="sect"><h3>Share of all computer-science papers about LLMs <em>by year</em></h3>
+    ${linechart(P.map((p) => ({ label: p.partial ? `${p.year}*` : String(p.year), v: p.share, partial: p.partial, tip: `${p.year}${p.partial ? " (so far)" : ""}: ${pp(p.share)} of ${fmt(p.n)} computer-science papers` })),
+      { fmt: (v) => pp(v), aria: `Share of all computer-science papers about LLMs, ${P[0].year} to ${P[P.length - 1].year}` })}
+    <p class="note">${part ? `* ${part.year} so far, drawn faint. ` : ""}Whole-field OpenAlex counts (the Beyond CS data), matching large language model, ChatGPT, GPT-4 or generative AI.</p></div>` : ""}
+  <div class="sect"><h3>Researchers with at least one LLM paper <em>by area</em></h3>
+    ${hbars(rows.map((r) => ({ label: areaName(r.area), sw: swatch(r.area), area: r.area, value: r.researchers,
+      tip: `${areaName(r.area)}: ${pct(r.researchers)} of ${r.n} researchers; LLM papers are ${pct(r.recent, 1)} of their top papers since 2022` })), { max: 1, fmt: (v) => pct(v), aria: "Share of researchers with an LLM paper, by area" })}</div>
+  <div class="sect"><h3>On the map</h3>
+    <div class="ramp"><div class="bar-g"></div><div class="ends"><span>0%</span><span>30%</span><span>60%+</span></div></div>
+    <div class="lgd"><span><i class="dot" style="background:var(--none)"></i>No papers since 2022</span></div>
+    <p class="note">Colour shows the share of each researcher's ${L.per_researcher} most-cited papers since 2022 that mention LLMs.</p></div>
+  ${method(`<p>A researcher's paper counts when its title or abstract mentions large language models, LLMs, GPT, ChatGPT, foundation models, in-context learning, instruction tuning, chain-of-thought or vision-language-action models; random samples of matches were all genuine. "Most-cited since 2022" favours fast-cited topics, so the researcher figure is an upper bound on adoption; the whole-field line has no such selection.</p>`)}`;
+}
+function fRobotics() {
+  const c = F.convergence, Rb = robStats();
+  if (!Rb.rl || ROLE.rl < 0) return `<p>This graph has no clearly identifiable robotics and reinforcement-learning areas, so this comparison is skipped.</p>`;
+  const r = Rb.rl, verdict = r.ci[1] < 0 ? "moved away from" : r.ci[0] > 0 ? "moved toward" : "moved about as much as everyone else toward";
+  const { most, least } = robPeople();
+  return `<p class="lead">Relative to the average CS researcher, roboticists' recent work <b>${verdict}</b> the ${esc(areaName(ROLE.rl))} area (${sgn(r.value)}, 95% interval ${sgn(r.ci[0])} to ${sgn(r.ci[1])}; ${r.n} roboticists).${Rb.ai ? ` Toward the ${esc(areaName(ROLE.ai))} area their shift (${sgn(Rb.ai.value)}) is ${Rb.ai.ci[0] > 0 || Rb.ai.ci[1] < 0 ? "clearly different from" : "not distinguishable from"} the average.` : ""}${Rb.llm ? ` ${pct(Rb.llm.researchers)} of roboticists have an LLM paper since 2022, against ${pct(F.llm.researchers_all)} of all researchers.` : ""}</p>
+  <p class="note">An earlier version said robotics was pulled hardest toward learning. That compared raw shifts without removing the drift every researcher shares, and measured each area against a centre that included its own members.</p>
+  <div class="sect"><h3>Shift toward the ${esc(areaName(ROLE.rl))} area <em>relative to the average researcher</em></h3>
+    ${dbars([...c.toward_rl].sort((a, b) => b.value - a.value).map((d) => ({ label: `${trunc(areaName(d.area), 40)} (${d.n})`, sw: swatch(d.area), area: d.area, value: d.value, ci: d.ci, hl: d.area === ROLE.rob,
+      tip: `${areaName(d.area)}, ${d.n} researchers: ${sgn(d.value)} (95% interval ${sgn(d.ci[0])} to ${sgn(d.ci[1])})` })),
+      { fmt: (v) => sgn(v), left: "away", right: "toward", aria: "Shift toward the reinforcement-learning area by area" })}</div>
+  ${most.length ? `<div class="sect"><h3>Roboticists who moved toward it</h3><ul class="people">${most.map(([i, d]) => person(i, sgn(d))).join("")}</ul></div>` : ""}
+  ${least.length ? `<div class="sect"><h3>… and most away from it</h3><ul class="people">${least.map(([i, d]) => person(i, sgn(d))).join("")}</ul></div>` : ""}
+  <div class="sect"><h3>On the map</h3>
+    ${divLegend("away from RL", "average", "toward RL")}
+    <p class="note">Roboticists are coloured by their shift relative to the average researcher; ${esc(areaName(ROLE.rl))} researchers keep their area colour; everyone else is faded.</p></div>
+  ${method(`<p>Same measurement as finding 1: equal paper samples per period, each period centred on its own mean, and the reference is the ${esc(areaName(ROLE.rl))} area's centre in 2017–21 papers. Only ${r.n} roboticists have enough papers in all three periods, so individual values are noisy; the interval reflects that.</p>`)}`;
+}
+function fCollab() {
+  const S = collabStats(), Cb = S.Cb, comms = [...Cb.communities].sort((a, b) => b.ratio - a.ratio);
+  const names = (rows) => rows.map(commLabel).join("; ");
+  return `<p class="lead">Researchers with similar work co-author far more often: the most similar tenth of pairs are <b>${Math.round(S.ratio)}×</b> as likely to have written a paper together as the least similar tenth (${Math.round(Cb.ratio_with_shared_papers)}× before co-authors' shared papers were taken out of the comparison). ${S.big.length} communities co-author at least 1.5× more than similarity predicts.${S.labs.length ? ` In ${S.labs.length === 1 ? "one" : S.labs.length} of them many pairs share an employer, and accounting for that removes much of the excess.` : ""}${S.other.length ? ` In the other ${S.other.length}, shared employers do not explain it.` : ""}</p>
+  <div class="sect"><h3>Chance two researchers have co-authored <em>by research similarity</em></h3>
+    ${columns(Cb.homophily.map((d) => ({ v: d.p, tip: `Similarity decile ${d.decile} (${d.lo.toFixed(2)} to ${d.hi.toFixed(2)}): ${(d.p * 100).toFixed(2)}% of pairs co-authored` })), { fmt: (v) => (v * 100).toFixed(v < 0.01 ? 2 : 1) + "%", left: "least similar tenth", right: "most similar tenth", aria: "Co-authorship rate by similarity decile" })}</div>
+  <div class="sect"><h3>Co-author pairs vs prediction <em>by community</em></h3>
+    <div class="lgd"><span><i class="o"></i>Predicted from similarity</span><span><i class="f"></i>Also accounting for a shared employer</span></div>
+    ${dumbbell(comms.map((c) => ({ label: COMMS[c.community].label, sw: swatch(COMMS[c.community].area), area: COMMS[c.community].area, a: c.ratio, b: c.ratio_org,
+      tip: `${COMMS[c.community].label} (${c.n}): ${c.ratio.toFixed(2)}× predicted; ${c.ratio_org.toFixed(2)}× after accounting for shared employers; strong ties only ${c.ratio_strong.toFixed(2)}×. ${pct(c.industry)} work in industry; ${pct(c.same_org, 1)} of pairs share an employer.` })),
+      { ref: 1, floor: 0, fmt: (v) => v.toFixed(2) + "×", tfmt: (t) => t + "×", aria: "Observed over predicted co-author pairs by community" })}
+    <p class="note">1× (dashed) means as many co-author pairs as similarity predicts.${S.labs.length ? ` Shared employers explain much of the excess for ${names(S.labs)}.` : ""}${S.other.length ? ` They do not for ${names(S.other)}.` : ""} Across communities, the share of same-employer pairs correlates ${Cb.corr_org.toFixed(2)} with the excess.</p></div>
+  <div class="sect"><h3>Research twins who never co-authored <em>similarity</em></h3>
+    <ul class="twins">${Cb.twins.map(([i, j, s]) => `<li><button data-r="${i}">${esc(R[i].name)}</button><span>↔</span><button data-r="${j}">${esc(R[j].name)}</button><span class="v">${s.toFixed(2)}</span></li>`).join("")}</ul>
+    <p class="note">Each pair checked directly with OpenAlex: 0 joint works.</p></div>
+  <div class="sect"><h3>On the map</h3>
+    ${divLegend("fewer than predicted", "as predicted", "more")}
+    <div class="lgd"><span><i class="dash"></i>Research twins</span></div>
+    <p class="note">Dots take their community's colour; lines are co-authorships.</p></div>
+  ${method(`<p>Co-authors share papers, which makes their profiles similar by construction, so every co-author pair is compared using profiles rebuilt without their shared papers (${Cb.pairs_dropped} pairs with too few other papers are left out). A logistic model predicts the chance of co-authoring from that similarity across all pairs; each community's observed pairs are divided by its predicted pairs, and a second model adds whether the pair shares an employer (Google and DeepMind count as one). OpenAlex lists only each person's 200 most frequent co-authors; repeating the test with strong ties (3+ joint papers) on the pairs where such ties are guaranteed to be listed gives the same pattern. Large software papers (scikit-learn, Weka) and OpenAlex crediting NeurIPS proceedings editors with every chapter inflate some excesses.</p>`)}`;
+}
+function fOnePaper() {
+  const O = F.onepaper, areas = [...O.by_area].sort((a, b) => a.median - b.median), low = areas[0];
+  const mx = (rows, k) => Math.ceil(Math.max(...rows.map((r) => r[k])) * 10) / 10;
+  return `<p class="lead"><b>${O.count50}</b> of the ${fmt(N)} get at least half their citations from a single paper, and ${O.count70} get 70% or more. Big-team papers put whole cohorts into the top ${fmt(N)}; ${esc(areaName(low.area))} researchers' citations are the most spread out (median ${pct(low.median)} from the top paper).</p>
+  <div class="sect"><h3>Citations from a researcher's top paper <em>median by area</em></h3>
+    ${hbars(areas.map((a) => ({ label: areaName(a.area), sw: swatch(a.area), area: a.area, value: a.median, hl: a.area === low.area,
+      tip: `${areaName(a.area)}: median ${pct(a.median)} of citations from the top paper; ${pct(a.frac)} of ${a.n} researchers get half or more` })), { max: mx(areas, "median"), fmt: (v) => pct(v), aria: "Median share of citations from the top paper by area" })}</div>
+  <div class="sect"><h3>Researchers with half their citations from one paper <em>by sector</em></h3>
+    ${hbars(O.sector.map((s) => ({ label: `${s.label} (${s.n})`, value: s.frac, hl: s.label === "Industry", tip: `${s.label}: ${pct(s.frac)} of ${s.n} researchers; median ${pct(s.median)} from the top paper` })), { max: mx(O.sector, "frac"), fmt: (v) => pct(v), aria: "Share of one-paper researchers in industry and academia" })}</div>
+  <div class="sect"><h3>Papers behind the largest cohorts <em>click to show on the map</em></h3>
+    <ul class="cohorts">${O.cohorts.map((c, k) => `<li><button data-cohort="${k}" aria-pressed="${st.cohort === k}"><span class="t">${esc(c.title)}</span><span class="c">${c.members.length} people</span></button></li>`).join("")}</ul></div>
+  <div class="sect"><h3>On the map</h3>
+    <div class="lgd"><span><i class="dot" style="background:var(--focus)"></i>${st.cohort >= 0 ? "Co-authors of the selected paper" : "At least half of citations from one paper"}</span><span><i class="dot" style="background:var(--none)"></i>Others</span></div></div>
+  ${method(`<p>Share = citations of the researcher's single most-cited paper divided by their total OpenAlex citations. OpenAlex sometimes splits one paper across versions, so shares are, if anything, underestimated. "Industry" means the researcher's current main affiliation is a company.</p>`)}`;
+}
+function renderFindings() {
+  const k = st.finding;
+  panel.innerHTML = `<div class="pane">
+    <div class="fnav"><button data-fnav="prev" aria-label="Previous finding"${k === 0 ? " disabled" : ""}>←</button>
+      <div class="fdots">${FTITLES.map((t, j) => `<button data-fnav="${j}" aria-label="Finding ${j + 1}: ${esc(t)}" aria-current="${j === k}">${j + 1}</button>`).join("")}</div>
+      <button data-fnav="next" aria-label="Next finding"${k === FTITLES.length - 1 ? " disabled" : ""}>→</button></div>
+    <div><p class="eyebrow">Finding ${k + 1} of ${FTITLES.length}</p><h2>${esc(FTITLES[k])}</h2></div>
+    ${[fChange, fLLM, fRobotics, fCollab, fOnePaper][k]()}
+    <button class="tog" data-view="methods">All metric definitions →</button>
+  </div>`;
+}
+function setFinding(k, fly = true) {
+  st.finding = Math.max(0, Math.min(FTITLES.length - 1, k)); st.cohort = -1; st.area = -1; st.sel = -1; st.hoverArea = -1;
+  renderPanel(); panel.scrollTop = 0;
+  announce(`Finding ${st.finding + 1} of ${FTITLES.length}: ${FTITLES[st.finding]}`);
+  try { history.replaceState(null, "", "#finding-" + (st.finding + 1)); } catch (_) {}
+  if (W && fly) { touched = true; flyTo(st.finding === 2 && robRlSet.size ? camFor([...robRlSet], 90) : camFor([...R.keys()], 36)); } else draw();
+}
+if (F) FTITLES = makeTitles();
+
+// chart tooltips: hover, tap and keyboard focus
+const ctip = document.createElement("div");
+ctip.className = "ctip"; ctip.hidden = true; ctip.setAttribute("aria-hidden", "true"); document.body.appendChild(ctip);
+function placeTip(text, x, y) {
+  ctip.textContent = text; ctip.hidden = false;
+  const w = ctip.offsetWidth, h = ctip.offsetHeight;
+  ctip.style.left = Math.max(8, Math.min(innerWidth - w - 8, x + 12)) + "px";
+  ctip.style.top = (y + h + 20 > innerHeight ? y - h - 10 : y + 14) + "px";
+}
+function wireTips(root) {
+  const onPoint = (e) => {
+    const g = e.target.closest("[data-tip]");
+    if (!g || !g.dataset.tip) { ctip.hidden = true; return; }
+    placeTip(g.dataset.tip, e.clientX, e.clientY);
+  };
+  root.addEventListener("pointermove", onPoint);
+  root.addEventListener("pointerdown", (e) => { if (e.pointerType !== "mouse") onPoint(e); });
+  root.addEventListener("focusin", (e) => {
+    const g = e.target.closest("[data-tip]");
+    if (!g || !g.dataset.tip) return;
+    const b = g.getBoundingClientRect(); placeTip(g.dataset.tip, b.left + Math.min(b.width, 200), b.top + b.height / 2);
+  });
+  root.addEventListener("focusout", () => { ctip.hidden = true; });
+  root.addEventListener("pointerleave", () => { ctip.hidden = true; });
+}
+wireTips(panel);
+
+// ---------- beyond CS & methods ----------
+const BX = D.beyond || null;
+const docWrap = $("#doc-wrap");
+const lg = (lo, hi, a, b) => { const l0 = Math.log10(lo), l1 = Math.log10(hi); return (v) => a + ((Math.log10(Math.min(hi, Math.max(lo, v))) - l0) / (l1 - l0)) * (b - a); };
+const pp = (v) => (v == null || Number.isNaN(v) ? "–" : v >= 0.095 ? (v * 100).toFixed(0) + "%" : v >= 0.0095 ? (v * 100).toFixed(1) + "%" : (v * 100).toFixed(2) + "%");
+const isNum = (v) => typeof v === "number" && !Number.isNaN(v);
+const fmtP = (p) => (!isNum(p) ? "–" : p < 0.001 ? "<0.001" : p.toFixed(3));
+const signPts = (d) => `${d >= 0 ? "+" : "−"}${Math.abs(d * 100).toFixed(1)}`;
+const BYEARS = BX ? BX.years.map(String) : [];
+const LFY = BX ? String(BX.partial_year ? BX.partial_year - 1 : BX.years[BX.years.length - 1]) : ""; // last full year
+const premiumOf = (f) => f.premium ? (isNum(f.premium["2022-24 same detector"]) ? f.premium["2022-24 same detector"] : f.premium["2022-24"]) : null;
+function bxStats() {
+  const cs = BX.fields.find((f) => f.id === "17") || null, nonCS = BX.fields.filter((f) => f.id !== "17");
+  const by = (rows, fn, dir) => rows.reduce((a, f) => ((fn(f) - fn(a)) * dir > 0 ? f : a));
+  const s = (f) => f.pop[LFY].ai, g = (f) => f.pop[LFY].ai / f.pop["2015"].ai;
+  const withP = nonCS.filter((f) => isNum(premiumOf(f))), withR = nonCS.filter((f) => f.res && isNum(f.res.now));
+  const chk = BX.check2026 || {}, tg = nonCS.filter((f) => chk[f.id] && chk[f.id].title_2015 > 0).map((f) => chk[f.id].title[0] / chk[f.id].title_2015);
+  // largest year-on-year swing in a field's top-100 AI share (complete years only)
+  let swing = null;
+  for (const f of nonCS) for (let k = 1; k < BYEARS.length; k++) {
+    const y0 = BYEARS[k - 1], y1 = BYEARS[k];
+    if (y1 > LFY || !f.top[y0] || !f.top[y1]) continue;
+    const d = Math.abs(f.top[y1].ai - f.top[y0].ai);
+    if (!swing || d > swing.d) swing = { d, f, y0, y1 };
+  }
+  return {
+    cs, nonCS, s, g, hiS: by(nonCS, s, 1), loS: by(nonCS, s, -1), hiG: by(nonCS, g, 1), loG: by(nonCS, g, -1),
+    withP, hiP: withP.length ? by(withP, premiumOf, 1) : null, loP: withP.length ? by(withP, premiumOf, -1) : null,
+    over: withP.filter((f) => premiumOf(f) > 1.2).length,
+    hiR: by(withR, (f) => f.res.now, 1), loR: by(withR, (f) => f.res.now, -1),
+    rose: withR.filter((f) => f.res.delta > 0).length, nR: withR.length,
+    sigLoose: withR.filter((f) => isNum(f.res.p) && f.res.p < 0.05).length,
+    sigStrict: withR.filter((f) => f.res.strict && isNum(f.res.strict.p) && f.res.strict.p < 0.05).length,
+    grew: nonCS.filter((f) => f.pop[LFY].ai > f.pop["2015"].ai).length,
+    llmMax: Math.max(...nonCS.map((f) => (f.pop[LFY] && f.pop[LFY].llm) || 0)),
+    titleMin: tg.length ? Math.min(...tg) : null, titleMax: tg.length ? Math.max(...tg) : null, titleAll: tg.length === nonCS.length,
+    aboutAI: nonCS.filter((f) => isNum(f.about_ai) && f.about_ai >= 0.75).sort((a, b) => b.about_ai - a.about_ai),
+    swing, llama: nonCS.find((f) => f.examples.some(([t]) => /\bllama\b/i.test(t))),
+  };
+}
+const names = (rows) => rows.map((f) => esc(f.short)).join(", ").replace(/, ([^,]*)$/, " and $1");
+function premiumScatter() {
+  const W = 680, H = 440, m = { l: 58, r: 24, t: 14, b: 52 };
+  const ys = ["2022", "2023", "2024"], mean = (a) => a.reduce((s, v) => s + v, 0) / a.length;
+  const topShare = (f) => (f.top_oa && ys.every((y) => f.top_oa[y]) ? mean(ys.map((y) => f.top_oa[y].ai / f.top_oa[y].all)) : mean(ys.map((y) => (f.top[y] ? f.top[y].ai : 0))));
+  const pts = BX.fields.map((f) => ({ f, x: mean(ys.map((y) => f.pop[y].ai)), y: topShare(f) }));
+  const xs = pts.map((p) => p.x), yv = pts.map((p) => p.y).filter((v) => v > 0);
+  const lo = Math.min(0.002, ...xs, ...yv) * 0.8, hiX = Math.max(0.5, ...xs) * 1.1, hiY = Math.max(0.8, ...yv) * 1.1;
+  const X = lg(lo, hiX, m.l, W - m.r), Y = lg(Math.min(0.01, ...yv) * 0.8, hiY, H - m.b, m.t);
+  const yLo = Math.min(0.01, ...yv) * 0.8;
+  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="group" aria-label="AI share of all papers against AI share of the most-cited papers, one dot per field">`;
+  for (const t of [0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5].filter((t) => t >= lo && t <= hiX))
+    s += `<line x1="${X(t)}" x2="${X(t)}" y1="${m.t}" y2="${H - m.b}" class="gl"/><text x="${X(t)}" y="${H - m.b + 16}" class="ax" text-anchor="middle">${pp(t)}</text>`;
+  for (const t of [0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5].filter((t) => t >= yLo && t <= hiY))
+    s += `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(t)}" y2="${Y(t)}" class="gl"/><text x="${m.l - 8}" y="${Y(t) + 4}" class="ax" text-anchor="end">${pp(t)}</text>`;
+  const diag = (k, lab, t, off) => { // label runs along the line, near its lower-left end
+    const x0 = Math.max(lo, yLo / k), x1 = Math.min(hiX, hiY / k);
+    if (x1 <= x0) return "";
+    const ax = X(x0), ay = Y(x0 * k), bx = X(x1), by = Y(x1 * k), px = ax + (bx - ax) * t, py = ay + (by - ay) * t;
+    const ang = (Math.atan2(by - ay, bx - ax) * 180) / Math.PI;
+    return `<line x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}" class="diag"/>
+      <text transform="translate(${px.toFixed(1)} ${py.toFixed(1)}) rotate(${ang.toFixed(1)})" y="${off}" class="ax">${lab}</text>`;
+  };
+  s += diag(1, "same share in both", 0.1, 13) + diag(10, "10× over-represented", 0.08, -5);
+  s += `<text x="${(m.l + W - m.r) / 2}" y="${H - 10}" class="ax" text-anchor="middle">AI-related share of all papers in the field, 2022–24 (log scale)</text>
+    <text transform="translate(14 ${(m.t + H - m.b) / 2}) rotate(-90)" class="ax" text-anchor="middle">AI-related share of the most-cited papers (log scale)</text>`;
+  for (const p of pts) { p.sx = X(p.x); p.sy = Y(Math.max(yLo, p.y)); }
+  const boxes = pts.map((p) => [p.sx - 7, p.sy - 7, p.sx + 7, p.sy + 7]);
+  const hitAny = (b) => b[0] < m.l || b[2] > W - 4 || b[1] < m.t || b[3] > H - m.b || boxes.some((o) => b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]);
+  const near = [[9, 4, "start"], [-9, 4, "end"], [9, -8, "start"], [9, 16, "start"], [-9, -8, "end"], [-9, 16, "end"], [0, -11, "middle"], [0, 21, "middle"]];
+  const far = [];
+  for (const d of [30, 44, 58]) for (const a of [0, -40, 40, -90, 90, 180, -140, 140]) far.push([Math.cos((a * Math.PI) / 180) * d, Math.sin((a * Math.PI) / 180) * d]);
+  for (const p of [...pts].sort((a, b) => b.sy - a.sy)) {
+    const w = p.f.short.length * 6.6 + 4, box = (lx, ly, anc) => { const x0 = anc === "start" ? lx : anc === "end" ? lx - w : lx - w / 2; return [x0, ly - 10, x0 + w, ly + 3]; };
+    let lab = null;
+    for (const [dx, dy, anc] of near) { const b = box(p.sx + dx, p.sy + dy, anc); if (!hitAny(b)) { lab = { x: p.sx + dx, y: p.sy + dy, anc, b }; break; } }
+    if (!lab) for (const [dx, dy] of far) {
+      const anc = dx >= 0 ? "start" : "end", b = box(p.sx + dx, p.sy + dy + 4, anc);
+      if (!hitAny(b)) { lab = { x: p.sx + dx, y: p.sy + dy + 4, anc, b, leader: true }; break; }
+    }
+    if (!lab) lab = { x: p.sx + 9, y: p.sy + 4, anc: "start", b: box(p.sx + 9, p.sy + 4, "start") };
+    boxes.push(lab.b); p.lab = lab;
+  }
+  for (const p of pts) {
+    const cs = p.f.id === "17", L = p.lab, tip = `${p.f.name}: ${pp(p.x)} of all papers vs ${pp(p.y)} of the most-cited papers are AI-related (${(p.y / p.x).toFixed(1)}× over-represented), 2022–24`;
+    s += `<g class="row" data-field="${p.f.id}" data-tip="${esc(tip)}" tabindex="0" role="img" aria-label="${esc(tip)}">
+      ${L.leader ? `<line x1="${p.sx}" y1="${p.sy}" x2="${L.anc === "start" ? L.b[0] - 2 : L.b[2] + 2}" y2="${L.y - 4}" class="lead-l"/>` : ""}
+      <circle cx="${p.sx}" cy="${p.sy}" r="13" class="hit"/><circle cx="${p.sx}" cy="${p.sy}" r="${cs ? 6.5 : 5.5}" class="bdot${cs ? " hl" : ""}"/>
+      <text x="${L.x}" y="${L.y}" class="cl" text-anchor="${L.anc}">${esc(p.f.short)}</text></g>`;
+  }
+  return s + "</svg>";
+}
+function multiple(f) {
+  const W = 236, H = 152, m = { l: 38, r: 34, t: 26, b: 18 }, yrs = BYEARS, n = yrs.length;
+  const X = (k) => m.l + (k / (n - 1)) * (W - m.l - m.r), Y = lg(0.0002, 1, H - m.b, m.t);
+  const pop = yrs.map((y) => (f.pop[y] ? f.pop[y].ai : 0)), top = yrs.map((y) => (f.top[y] ? f.top[y].ai : 0));
+  const full = yrs.indexOf(LFY) + 1 || n;
+  const path = (vals, floor, a = 0, b = vals.length) => vals.slice(a, b).map((v, k) => `${k ? "L" : "M"}${X(a + k).toFixed(1)},${Y(Math.max(floor, v)).toFixed(1)}`).join("");
+  const growth = f.pop[LFY].ai / f.pop["2015"].ai;
+  const aria = `${f.name}: AI-related share of all papers ${pp(f.pop["2015"].ai)} in 2015 and ${pp(f.pop[LFY].ai)} in ${LFY}; of the most-cited papers ${pp(top[yrs.indexOf("2015")])} and ${pp(top[full - 1])}`;
+  let s = `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="${esc(aria)}">
+    <text x="0" y="13" class="ttl">${esc(f.short)}</text>
+    <text x="${W}" y="13" class="ax" text-anchor="end">${growth.toFixed(0)}× 2015–${LFY.slice(2)}</text>`;
+  for (const t of [0.001, 0.01, 0.1, 1])
+    s += `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(t)}" y2="${Y(t)}" class="gl"/><text x="${m.l - 5}" y="${Y(t) + 3.5}" class="ax" text-anchor="end">${pp(t)}</text>`;
+  s += `<text x="${X(0)}" y="${H - 3}" class="ax">${yrs[0]}</text><text x="${X(n - 1)}" y="${H - 3}" class="ax" text-anchor="end">${yrs[n - 1]}${full < n ? "*" : ""}</text>`;
+  s += `<path d="${path(top, 0.005, 0, full)}" class="lt"/><path d="${path(pop, 0.0002, 0, full)}" class="lp"/>`;
+  if (full < n) s += `<path d="${path(top, 0.005, full - 1, n)}" class="lt part"/><path d="${path(pop, 0.0002, full - 1, n)}" class="lp part"/>
+      <circle cx="${X(n - 1)}" cy="${Y(Math.max(0.0002, pop[n - 1]))}" r="2.6" class="pend"/>`;
+  const yp = Y(pop[full - 1]);
+  s += `<circle cx="${X(full - 1)}" cy="${yp}" r="2.8" class="pt"/><text x="${X(full - 1) - 4}" y="${yp - 7}" class="cv halo" text-anchor="end">${pp(pop[full - 1])}</text>`;
+  const w = (W - m.l - m.r) / (n - 1);
+  yrs.forEach((y, k) => {
+    s += `<rect x="${X(k) - w / 2}" y="${m.t}" width="${w}" height="${H - m.t - m.b}" class="hit" data-tip="${esc(`${f.short}, ${y}${k >= full ? " (so far)" : ""}: ${pp(pop[k])} of ${f.pop[y] ? fmt(f.pop[y].all) : "–"} papers are AI-related; ${top[k] ? pp(top[k]) : "under 1%"} of the 100 most-cited`)}"/>`;
+  });
+  return `<figure data-field="${f.id}" tabindex="0" data-tip="${esc(aria)}">${s}</svg></figure>`;
+}
+function resTable() {
+  const rows = BX.fields.filter((f) => f.res && isNum(f.res.now)).sort((a, b) => b.res.now - a.res.now);
+  return `<div class="chart-x"><table class="btable"><caption class="sr-only">Top researchers' AI-related share, then and now, by field</caption>
+    <thead><tr><th scope="col">Field</th><th class="num" scope="col">Researchers</th><th class="num" scope="col">AI share then</th><th class="num" scope="col">now</th>
+    <th class="num" scope="col">Change, 95% CI (points)</th><th class="num" scope="col">p</th><th class="num" scope="col">Strict rule now</th><th class="num" scope="col">Strict p</th><th class="num" scope="col">≥ 1 AI paper</th><th class="num" scope="col">≥ 1 LLM paper</th></tr></thead>
+    <tbody>${rows.map((f) => {
+      const r = f.res, s = r.strict || {};
+      return `<tr data-field="${f.id}"><th scope="row">${esc(f.short)}</th><td class="num">${r.n}</td><td class="num">${pp(r.then)}</td><td class="num">${pp(r.now)}</td>
+        <td class="num">${signPts(r.delta)} [${(r.ci[0] * 100).toFixed(1)}, ${(r.ci[1] * 100).toFixed(1)}]</td><td class="num">${fmtP(r.p)}</td>
+        <td class="num">${pp(s.now)}</td><td class="num">${fmtP(s.p)}</td><td class="num">${pct(r.any_now)}</td><td class="num">${pct(r.llm_now)}</td></tr>`;
+    }).join("")}</tbody></table></div>`;
+}
+function partialNote(S) {
+  const c = BX.check2026;
+  if (!c || !BX.partial_year) return "";
+  const py = String(BX.partial_year), rows = S.nonCS.concat(S.cs ? [S.cs] : []).filter((f) => c[f.id] && f.pop[LFY] && f.pop[py]);
+  const dir = (a, b) => Math.sign(b - a);
+  const disagree = rows.filter((f) => dir(c[f.id].title[0], c[f.id].title[1]) !== dir(f.pop[LFY].ai, f.pop[py].ai));
+  const dips = rows.filter((f) => !disagree.includes(f) && f.pop[py].ai < f.pop[LFY].ai);
+  return `<p class="sub">Read ${py} with care: counting AI terms in titles only and in titles plus abstracts gives opposite ${LFY} → ${py} directions for ${disagree.length} of ${rows.length} fields${disagree.length ? ` (${names(disagree)})` : ""}.${dips.length ? ` Where the two agree, ${names(dips)} dip in ${py}; it is too early to tell a plateau from OpenAlex still classifying recent papers.` : ""}${S.titleMin != null ? ` The long-run growth does not depend on abstracts: counting titles only, the AI share grew ${S.titleMin.toFixed(0)}–${S.titleMax.toFixed(0)}× from 2015 to ${LFY}${S.titleAll ? " in every field" : ""}.` : ""}</p>`;
+}
+function renderBeyond() {
+  const S = bxStats(), order = (S.cs ? [S.cs] : []).concat([...S.nonCS].sort((a, b) => S.s(b) - S.s(a)));
+  const ex = order.filter((f) => f.examples.length), withRes = BX.fields.filter((f) => f.res && isNum(f.res.now));
+  docWrap.innerHTML = `<style class="hl"></style><div class="doc bcs">
+    <header><p class="eyebrow">Beyond computer science · ${S.nonCS.length} fields · OpenAlex</p>
+      <h2>Is every field being pulled toward AI?</h2>
+      <p>Every field's AI share is rising, from a much lower base than in computer science, and the most-cited papers make the shift look bigger than it is. Hover, tap or tab to any chart for exact values; hovering a field highlights it everywhere on this page.</p></header>
+    <section><h3>Attention vs practice</h3>
+      <p class="sub">Each dot is a field. Dots above the diagonal have more AI-related papers among their most-cited work than among all their papers. Both shares use the same OpenAlex search, so they are directly comparable.</p>
+      <div class="chart-x">${premiumScatter()}</div></section>
+    <section><h3>AI-related share of papers, ${BYEARS[0]}–${BYEARS[BYEARS.length - 1]}</h3>
+      <div class="lgd"><span><i class="ln"></i>All papers in the field</span><span><i class="lt"></i>The 100 most-cited papers of each year</span><span>Log scale · labels show ${LFY}, the last full year${BX.partial_year ? ` · * ${BX.partial_year} so far, drawn faint` : ""}</span></div>
+      ${partialNote(S)}
+      <div class="smalls">${order.map(multiple).join("")}</div></section>
+    <section><h3>Top researchers: most-cited papers up to 2016 vs since 2022</h3>
+      <p class="sub">AI-related share of each researcher's 25 most-cited papers with 50 or fewer authors, averaged over each field's top researchers.</p>
+      <div class="lgd"><span><i class="o"></i>Up to 2016</span><span><i class="f"></i>Since 2022</span></div>
+      <div class="chart-x">${dumbbell([...withRes].sort((a, b) => b.res.now - a.res.now).map((f) => ({ label: `${f.short} · ${f.res.n} researchers`, a: f.res.then, b: f.res.now, field: f.id,
+        tip: `${f.name}: ${pp(f.res.then)} → ${pp(f.res.now)} of top papers are AI-related; ${pct(f.res.any_now)} of researchers have at least one` })),
+        { w: 680, floor: 0, fmt: pp, tfmt: (t) => pct(t), aria: "AI-related share of top researchers' papers, then and now, by field" })}</div>
+      ${resTable()}
+      <p class="sub">p: Wilcoxon signed-rank test on each researcher's then/now pair. Strict rule: an AI term in the title, or two or more mentions in the abstract.</p></section>
+    <section><h3>Are the top-cited AI papers about AI, or using it?</h3>
+      <p class="sub">Share of the AI-related papers among each field's most-cited papers since 2022 that have an AI term in the title, a sign that AI is the subject rather than a tool.</p>
+      <div class="chart-x">${hbars(BX.fields.filter((f) => isNum(f.about_ai)).sort((a, b) => b.about_ai - a.about_ai).map((f) => ({ label: f.short, value: f.about_ai, field: f.id, hl: f.id === "17",
+        tip: `${f.name}: ${pct(f.about_ai)} of its most-cited AI-related papers since 2022 name AI in the title` })), { w: 680, max: 1, fmt: (v) => pct(v), aria: "Share of top-cited AI papers that are about AI, by field" })}</div></section>
+    <section><h3>Most-cited AI-related papers since 2022</h3>
+      <p class="sub">Matched by keyword, so a few mention AI only in passing (for example a database update or a physics review).</p>
+      <div class="ex-grid">${ex.map((f) => `<div data-field="${f.id}"><h4>${esc(f.short)}</h4><ol>${f.examples.map(([t, y, c]) => `<li>${esc(t)} <span class="m">${y} · ${fmt(c)} citations</span></li>`).join("")}</ol></div>`).join("")}</div></section>
+  </div>`;
+}
+function renderBeyondPanel() {
+  const S = bxStats(), cs = S.cs, n = S.nonCS.length;
+  panel.innerHTML = `<div class="pane">
+    <div><p class="eyebrow">Beyond computer science</p><h2>Every field is moving toward AI, far more slowly than computer science</h2></div>
+    <p class="lead">Across ${n} fields, the AI-related share of papers is growing everywhere. Outside CS it is still ${pp(S.s(S.loS))}–${pp(S.s(S.hiS))} of papers in ${LFY}${cs ? `, against ${pp(S.s(cs))} in CS` : ""}.</p>
+    <div class="sect"><h3>What the data shows</h3><ol class="ins">
+      <li><b>Top researchers moved toward AI in ${S.rose === S.nR ? "every field" : `${S.rose} of ${S.nR} fields`}.</b> The change is significant in ${S.sigLoose}, and in ${S.sigStrict} under the strict rule. Their AI-related share now ranges from ${pp(S.loR.res.now)} (${esc(S.loR.short)}) to ${pp(S.hiR.res.now)} (${esc(S.hiR.short)})${cs && cs.res ? `, against ${pp(cs.res.now)} in CS` : ""}.</li>
+      <li><b>Across all papers, the AI share grew ${S.g(S.loG).toFixed(0)}–${S.g(S.hiG).toFixed(0)}× from 2015 to ${LFY}</b>${S.grew === n ? ", in every field" : ` (in ${S.grew} of ${n} fields)`}${S.titleMin != null ? `, and ${S.titleMin.toFixed(0)}–${S.titleMax.toFixed(0)}× counting titles only` : ""}. ${esc(S.hiS.short)} leads at ${pp(S.s(S.hiS))} in ${LFY}; ${esc(S.loS.short)} is lowest at ${pp(S.s(S.loS))}.</li>
+      <li><b>LLMs are still rare outside CS:</b> at most ${pp(S.llmMax)} of a field's papers in ${LFY}${cs && cs.pop[LFY] && isNum(cs.pop[LFY].llm) ? `, against ${pp(cs.pop[LFY].llm)} in CS` : ""}.</li>
+      ${S.hiP ? `<li><b>Top-cited lists exaggerate the shift in ${S.over} of ${S.withP.length} fields.</b> AI-related papers are up to ${premiumOf(S.hiP).toFixed(0)}× over-represented among the most-cited papers of 2022–24 (${esc(S.hiP.short)})${premiumOf(S.loP) < 1.2 ? `; in ${esc(S.loP.short)} they are not (${premiumOf(S.loP).toFixed(1)}×)` : ""}.${isNum(S.hiP.about_ai) && S.hiP.about_ai >= 0.5 ? ` In ${esc(S.hiP.short)}, ${pct(S.hiP.about_ai)} of the top-cited AI papers are about AI itself rather than using it.` : ""}</li>` : ""}
+    </ol></div>
+    <div class="sect"><h3>Is "top-cited papers" a good trend metric?</h3>
+      <p>Not on its own. It measures attention, not how research is done.</p>
+      <ul class="bul">
+        ${S.hiP ? `<li>It over-represents AI by up to ${premiumOf(S.hiP).toFixed(0)}× compared with all papers.</li>` : ""}
+        ${S.aboutAI.length ? `<li>In ${names(S.aboutAI)}, at least three quarters of the top-cited AI papers are about AI, not using it.</li>` : ""}
+        ${S.swing ? `<li>A top-100 list is a small, volatile sample: ${esc(S.swing.f.short)}'s AI share moved ${Math.round(S.swing.d * 100)} points between ${S.swing.y0} and ${S.swing.y1}.</li>` : ""}
+        <li>Field labels and keywords add noise${S.llama ? `: OpenAlex files Llama 2 under ${esc(S.llama.short)}` : ""}.</li>
+      </ul></div>
+    <div class="sect"><h3>Better metrics, most to least useful</h3>
+      <ol class="bul"><li>AI share of all papers per field and year</li><li>Share of active researchers who have adopted AI methods</li><li>AI as a method kept apart from AI as the topic</li><li>Citations normalised by field and year, not raw top lists</li></ol></div>
+    <button class="cta" data-view="methods"><b>How every metric is measured →</b><span>Definitions, formulas, data windows and caveats for the map, the findings and this page.</span></button>
+  </div>`;
+}
+const METRICS = [
+  ["Cosine similarity", "cos(a, b) = a·b / (|a| |b|) between two SPECTER2 vectors; 1 = same direction.", "Everywhere"],
+  ["Researcher profile", "Mean of the SPECTER2 vectors of a researcher's 100 most-cited papers, weighted by 1 + ln(1 + citations), minus the mean profile of all researchers, then normalised.", "Map, similar work, communities"],
+  ["Similar work", "Each researcher's 10 profiles with the highest cosine similarity.", "Map lines, panel, Neo4j SIMILAR_TO"],
+  ["Communities and areas", "k-means on the profiles, k chosen by the best cosine silhouette (14–24 tried); a community is split in two when its 2-way split is well separated (silhouette ≥ 0.4, both parts ≥ 12). Communities are grouped into ≤ 8 colour-coded areas by centroid similarity; a community that is ≥ 40% robotics keeps its own area.", "Colours, map labels"],
+  ["Period profile", "For a researcher and a period (most-cited papers up to 2016, or since 2022): the mean of 8 randomly sampled papers, averaged over 10 samples, then centred on that period's mean over all researchers. Centring removes the shift every researcher shares and stops it compressing differences.", "Findings 1, 3"],
+  ["Area distinctness", "Mean similarity of same-area pairs minus mean similarity of cross-area pairs, using period profiles and areas fitted on 2017–21 papers (neither period). Areas fitted on either period bias the test toward that period.", "Finding 1"],
+  ["Relative shift toward an area", "cos(since-2022 profile, area's 2017–21 centre) − cos(up-to-2016 profile, same centre), minus the average over all researchers; 0 = moved like the average researcher. 95% bootstrap intervals.", "Findings 1, 3"],
+  ["LLM paper", "Title or abstract mentions large language model(s), LLM, GPT, ChatGPT, foundation model, in-context learning, instruction tuning, chain-of-thought or vision-language-action.", "Finding 2"],
+  ["Similarity without shared papers", "For every co-author pair, both profiles are rebuilt from their own top papers minus the papers they wrote together, so co-authors do not look similar merely because they share papers.", "Finding 4"],
+  ["Co-authorship ratio", "Observed co-author pairs within a community ÷ pairs predicted by a logistic model of P(co-authored) on similarity without shared papers (cubic). A second model adds 'shares an employer' (Google + DeepMind count as one).", "Finding 4"],
+  ["Strong-tie check", "The same ratio counting only pairs with ≥ 3 joint works, restricted to the pairs (about 96%) where OpenAlex's 200-co-author lists are guaranteed to show such a tie.", "Finding 4"],
+  ["Research twins", "Highest-similarity pairs at different institutions with no joint works, each confirmed by a direct OpenAlex query.", "Finding 4"],
+  ["One-paper share", "Citations of a researcher's most-cited paper ÷ their total citations. 'One-paper researcher' = ≥ 50%.", "Finding 5"],
+  ["AI-related paper", "Title or abstract mentions machine learning, deep learning, artificial intelligence, artificial neural network, convolutional neural, large language model, random forest, support vector machine, graph neural network, ChatGPT or generative AI. Bare 'AI' and 'neural network' are excluded (aromatase inhibitor; brain circuits).", "Beyond CS"],
+  ["Strict AI rule", "An AI term in the title, or ≥ 2 mentions in the abstract.", "Beyond CS robustness"],
+  ["Researcher AI share", "Share of a researcher's 25 most-cited papers (≤ 50 authors) in a period that are AI-related. Researchers need ≥ 5 papers in both periods, and each counts in one field only.", "Beyond CS"],
+  ["Significance", "Wilcoxon signed-rank test on paired then/now shares; 95% bootstrap interval of the mean change.", "Beyond CS"],
+  ["Field-wide AI share", "Papers matching the AI search ÷ all papers, per OpenAlex field (primary topic) and publication year. Articles, reviews, conference papers, preprints and book chapters.", "Beyond CS"],
+  ["Top-cited AI share", "AI-related share among a field-year's most-cited papers: all papers cited at least as often as its 100th most-cited paper, matched with the same OpenAlex search as the field-wide share (2022–24).", "Beyond CS"],
+  ["Citation premium", "Top-cited AI share ÷ field-wide AI share, averaged over 2022–24. 1× = no over-representation.", "Beyond CS"],
+  ["About AI vs using AI", "Among top-cited AI-related papers, the share with an AI term in the title (AI is the subject).", "Beyond CS"],
+];
+const MSECT = [["m-data", "Data"], ["m-map", "Embeddings, graph and map"], ["m-metrics", "Metric definitions"], ["m-trust", "Which metric to trust"], ["m-fixes", "Corrections"], ["m-caveats", "Caveats"], ["m-repro", "Reproduce"]];
+function renderMethods() {
+  const m = D.meta, S = BX ? bxStats() : null;
+  docWrap.innerHTML = `<div class="doc mdoc">
+    <header><p class="eyebrow">Methods and metrics</p><h2>How the map, the findings and Beyond CS are measured</h2>
+      <p>Everything comes from OpenAlex (data retrieved ${esc(m.retrieved || m.generated)}) and the scripts in this project; the numbers on these pages are computed from their output.</p></header>
+    <section id="m-data" tabindex="-1"><h3>1. Data</h3><dl class="kv2">
+      <dt>Researchers</dt><dd>The ${fmt(m.n)} most-cited OpenAlex authors whose top topics are at least 50% computer science or robotics (16 robotics topics). OpenAlex files all deep RL under "Reinforcement Learning in Robotics", so that topic counts as robotics only for people who also have a hands-on robotics topic. Profiles of the same person are merged when they share a name (or a spelling variant such as "A.Y. Ng") and an institution and at least one topic, or most of their topics; fragments with fewer than 5 works are folded into the matching full profile or dropped.</dd>
+      <dt>Papers</dt><dd>Each researcher's ${m.works_per} most-cited works with title and abstract: ${fmt(m.n_papers)} unique papers, with versions of the same paper merged, including works where OpenAlex truncates the author list. For then/now comparisons, also each researcher's 30 most-cited papers published since 2022 (versions merged).</dd>
+      <dt>Co-authorship</dt><dd>Joint works between selected researchers, from OpenAlex's count of each person's 200 most frequent co-authors (${fmt(m.n_coauthor)} pairs).</dd>
+      <dt>Other fields</dt><dd>${S ? S.nonCS.length : 12} OpenAlex fields plus CS: up to 100 most-cited researchers per field (≥ 50% of topics in the field, each person in one field), the 100 most-cited papers per field and year${BYEARS.length ? ` (${BYEARS[0]}–${BYEARS[BYEARS.length - 1]}${BX.partial_year ? `, ${BX.partial_year} so far` : ""})` : ""}, and the number of all papers per field and year, with and without the AI search.</dd>
+    </dl></section>
+    <section id="m-map" tabindex="-1"><h3>2. Embeddings, graph and map</h3><ul class="bul">
+      <li>Papers are embedded with SPECTER2 (allenai/specter2_base with the proximity adapter) from title + abstract; 768 dimensions.</li>
+      <li>A researcher's profile averages their papers' vectors with log-citation weights. The mean of all ${fmt(m.n)} profiles is removed, because averaged vectors otherwise all look alike (cosine ≈ 0.94).</li>
+      <li>The graph links each researcher to their ${m.k} most similar profiles (SIMILAR_TO) and to co-authors (COAUTHOR); Neo4j also holds papers, topics, institutions, communities and areas.</li>
+      <li>Communities: k-means on the profiles, with well-separated communities split (${fmt(m.n_communities)} communities). Areas: communities grouped by centroid similarity into ${AREAS.length} colour-coded areas, the most a categorical palette can keep distinguishable.</li>
+      <li>Layout: UMAP of the profiles to 2-D (cosine, 15 neighbours). Distance on the map approximates similarity of research; the axes have no meaning.${HAS3D ? " The 3D view is a separate 3-D UMAP with the same settings, rotated (orthogonal Procrustes) to line up with the 2-D map and scaled to unit RMS radius." : ""}</li>
+    </ul></section>
+    <section id="m-metrics" tabindex="-1"><h3>3. Metric definitions</h3>
+      <div class="chart-x"><table class="mtable"><caption class="sr-only">Metric definitions</caption><thead><tr><th scope="col">Metric</th><th scope="col">Definition</th><th scope="col">Used in</th></tr></thead>
+      <tbody>${METRICS.map(([a, b, c]) => `<tr><th scope="row">${esc(a)}</th><td>${esc(b)}</td><td>${esc(c)}</td></tr>`).join("")}</tbody></table></div></section>
+    <section id="m-trust" tabindex="-1"><h3>4. Which metric to trust</h3>
+      <p>Different metrics answer different questions. For "how is research changing", prefer the ones higher in this list.</p>
+      <ol class="bul">
+        <li><b>Share of all papers</b> (per field and year): the whole population, so no selection bias. Limited by keyword matching and OpenAlex's field labels.</li>
+        <li><b>Share of researchers who adopted a method</b>: shows how widely practice changed. The top-researcher version used here describes established leaders, who move more slowly and whose recent papers often come from students.</li>
+        <li><b>Embedding shifts</b> (findings 1 and 3): catch subtler change than keywords, but only with care. The reference areas must come from data outside both periods, each period must be centred, and shifts must be compared with the average researcher; without that they produce confident artefacts (see Corrections).</li>
+        <li><b>Top-cited papers</b>: measures attention. ${S && S.hiP ? `AI-related papers are over-represented in ${S.over} of ${S.withP.length} fields' top lists, by up to ${premiumOf(S.hiP).toFixed(0)}×, and outside the natural sciences most are about AI rather than using it.` : ""} Useful for spotting what is being discussed, not for measuring adoption.</li>
+      </ol></section>
+    <section id="m-fixes" tabindex="-1"><h3>5. Corrections</h3><ul class="bul">
+      <li><b>Finding 1 was reversed.</b> An earlier version reported CS areas 22% less distinct since 2016 ("converging on AI"). It used areas fitted on profiles dominated by pre-2016 papers and uncentred vectors; with neutral areas and centred periods, areas are slightly more distinct.</li>
+      <li><b>Finding 3 was reversed.</b> An earlier version said robotics was pulled hardest toward learning. Measured relative to the average researcher, robotics moved away from the reinforcement-learning area. Its "drift from its own centre" also compared people with a centre that included themselves, which inflates small areas.</li>
+      <li><b>Finding 4 is smaller.</b> Similar researchers' co-authorship advantage fell from about 177× to about 137× once co-authors' shared papers were removed from the similarity.</li>
+      <li><b>Data fixes.</b> Works where a researcher is beyond OpenAlex's 100-author list cut-off are now kept (395 works, 112 researchers); recent-paper versions are merged; spelling-variant profiles are merged only with a shared topic; and the citation premium uses one detector for both shares.</li>
+    </ul></section>
+    <section id="m-caveats" tabindex="-1"><h3>6. Caveats</h3><ul class="bul">
+      <li>OpenAlex author disambiguation is imperfect: some profiles merge several people (very broad profiles such as "Gang Li") and some people are split.</li>
+      <li>Co-author lists stop at 200 per person, so rare collaborations of prolific people can be missing (the strong-tie check accounts for this).</li>
+      <li>Keyword matching counts mentions; a paper can mention machine learning in passing. The strict rule halves the shares but keeps the trends.</li>
+      <li>OpenAlex field labels move some AI-heavy papers into Computer Science and file some AI papers oddly.</li>
+      <li>Top researchers are selected by all-time citations, so they are senior. Large-collaboration fields (physics, medicine) lose many papers to the 50-author limit.</li>
+      <li>Embedding shifts are relative: they say which areas moved more or less than the average researcher, not how far the whole field moved.</li>
+      ${BX && BX.partial_year ? `<li>${BX.partial_year} is a partial year: its papers have had only months to collect citations, and year-on-year changes into it differ between title-only and title-plus-abstract counts. Headline numbers use ${LFY}; the citation premium uses 2022–24.</li>` : ""}
+    </ul></section>
+    <section id="m-repro" tabindex="-1"><h3>7. Reproduce</h3>
+      <pre class="code">./run_all.sh                                   # everything below, in order
+.venv/bin/python scripts/01_select_researchers.py … 05_load_neo4j.py   # graph and Neo4j
+.venv/bin/python analysis/fetch_recent.py      # papers since 2022 for the then/now findings
+.venv/bin/python analysis/export_findings.py   # findings 1–5 (single source of the numbers)
+.venv/bin/python analysis/insights.py          # readable summary of the findings
+.venv/bin/python analysis/fields_fetch.py      # Beyond CS data (OpenAlex)
+.venv/bin/python analysis/fields_analyze.py    # Beyond CS numbers
+.venv/bin/python scripts/06_build_viz.py       # rebuild the page</pre></section>
+  </div>`;
+}
+function renderMethodsPanel() {
+  panel.innerHTML = `<div class="pane">
+    <div><p class="eyebrow">Methods and metrics</p><h2>How everything on these pages is measured</h2></div>
+    <p>Definitions, formulas and caveats for the map, the five findings and the Beyond CS comparison, and the corrections made after review. Jump to a section:</p>
+    <ul class="toc">${MSECT.map(([id, t], k) => `<li><button data-goto="${id}">${k + 1}. ${t}</button></li>`).join("")}</ul>
+    <div class="sect"><h3>Elsewhere</h3><div class="links">
+      ${F ? `<button class="tog" data-view="findings">Findings</button>` : ""}${BX ? `<button class="tog" data-view="beyond">Beyond CS</button>` : ""}<button class="tog" data-view="map">Map</button></div></div>
+  </div>`;
+}
+wireTips(docWrap);
+docWrap.addEventListener("pointerover", (e) => {
+  const st_ = docWrap.querySelector("style.hl"); if (!st_) return;
+  const f = e.target.closest("[data-field]");
+  st_.textContent = f ? `.bcs [data-field]:not([data-field="${f.dataset.field.replace(/[^\w-]/g, "")}"]) { opacity: .28; }` : "";
+});
+docWrap.addEventListener("pointerleave", () => { const st_ = docWrap.querySelector("style.hl"); if (st_) st_.textContent = ""; });
+
+function renderPanel() {
+  if (st.sel >= 0) renderDetail(st.sel);
+  else if (st.view === "findings" && F) renderFindings();
+  else if (st.view === "beyond" && BX) renderBeyondPanel();
+  else if (st.view === "methods") renderMethodsPanel();
+  else renderOverview();
+  const h = panel.querySelector("h2"); if (h) h.tabIndex = -1; // focus target after re-renders
+  updateJump();
+}
+const statusEl = $("#status"), jumpBtn = $("#jump");
+function announce(msg) { statusEl.textContent = ""; setTimeout(() => { statusEl.textContent = msg; }, 30); }
+const narrow = matchMedia("(max-width: 880px)");
+function updateJump() { // phones: the panel sits below the map, so offer a way to it after a selection
+  jumpBtn.hidden = !(narrow.matches && st.sel >= 0 && (st.view === "map" || st.view === "findings" || st.view === "3d"));
+}
+jumpBtn.onclick = () => { panel.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" }); panel.querySelector("h2")?.focus({ preventScroll: true }); };
+narrow.addEventListener("change", updateJump);
+panel.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-r],[data-area],[data-back],[data-fnav],[data-cohort],[data-open-findings],[data-view],[data-goto]");
+  if (!b) return;
+  const focusKey = ["fnav", "cohort", "area"].find((k) => b.dataset[k] !== undefined);
+  const focusVal = focusKey ? b.dataset[focusKey] : null, hadFocus = panel.contains(document.activeElement);
+  if (b.dataset.view !== undefined) setView(b.dataset.view);
+  else if (b.dataset.goto !== undefined) {
+    const t = docWrap.querySelector("#" + CSS.escape(b.dataset.goto));
+    if (t) { t.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }); t.focus({ preventScroll: true }); }
+    return;
+  } else if (b.dataset.openFindings !== undefined) setView("findings");
+  else if (b.dataset.fnav !== undefined) {
+    const v = b.dataset.fnav; setFinding(v === "prev" ? st.finding - 1 : v === "next" ? st.finding + 1 : +v);
+  } else if (b.dataset.cohort !== undefined) {
+    const k = +b.dataset.cohort; st.cohort = st.cohort === k ? -1 : k; renderPanel();
+    if (W) { touched = true; flyTo(st.cohort >= 0 ? camFor(F.onepaper.cohorts[k].members, 80, s0, s0 * 5) : camFor([...R.keys()], 36)); }
+  } else if (b.dataset.back !== undefined) select(-1, { fly: false });
+  else if (b.dataset.r !== undefined) select(+b.dataset.r);
+  else focusArea(+b.dataset.area);
+  // the panel was re-rendered: put keyboard focus back on the matching control, or the heading
+  if (hadFocus && !panel.contains(document.activeElement)) {
+    const same = focusKey && panel.querySelector(`[data-${focusKey}="${CSS.escape(focusVal)}"]:not([disabled])`);
+    (same || panel.querySelector("h2"))?.focus();
+  }
+});
+panel.addEventListener("pointerover", (e) => {
+  const b = e.target.closest("[data-area]");
+  const a = b ? +b.dataset.area : -1;
+  if (a !== st.hoverArea) { st.hoverArea = a; draw(); }
+});
+panel.addEventListener("pointerleave", () => { if (st.hoverArea >= 0) { st.hoverArea = -1; draw(); } });
+
+// ---------- table view ----------
+const tableWrap = $("#table-wrap");
+const COLS = [
+  ["rank", "#", "num"], ["name", "Researcher", ""], ["inst", "Institution", ""], ["a", "Research area", ""],
+  ["cites", "Citations", "num"], ["h", "h-index", "num"], ["works", "Works", "num"], ["rob", "Robotics", "num"],
+];
+function renderTable() {
+  const q = fold($("#q").value.trim()), { key, dir } = st.sort;
+  let rows = [...R.keys()].filter((i) => (!q || hay[i].includes(q)) && (st.area < 0 || R[i].a === st.area));
+  rows.sort((a, b) => {
+    let x = R[a][key], y = R[b][key];
+    if (key === "a") { x = AREAS[x].label; y = AREAS[y].label; }
+    if (typeof x === "string" || typeof y === "string") return dir * String(x || "").localeCompare(String(y || ""));
+    return dir * ((x ?? -1) - (y ?? -1));
+  });
+  const head = COLS.map(([k, l, c]) => `<th class="${c}" ${k === key ? `aria-sort="${dir > 0 ? "ascending" : "descending"}"` : ""}><button data-sort="${k}">${l}${k === key ? (dir > 0 ? " ↑" : " ↓") : ""}</button></th>`).join("");
+  const body = rows.map((i) => {
+    const r = R[i];
+    return `<tr data-r="${i}" aria-selected="${i === st.sel}"><td class="num">${r.rank}</td><td class="nm"><button class="rowbtn" data-r="${i}">${esc(r.name)}</button></td><td class="inst">${esc(r.inst || "")}</td>
+      <td><span class="tag"><span class="sw" style="background:${areaColor(r.a)}"></span>${esc(AREAS[r.a].label)}</span></td>
+      <td class="num">${fmt(r.cites)}</td><td class="num">${r.h ?? "–"}</td><td class="num">${fmt(r.works)}</td><td class="num">${Math.round(r.rob * 100)}%</td></tr>`;
+  }).join("");
+  tableWrap.innerHTML = `<table><caption class="sr-only">Researchers in the atlas</caption><thead><tr>${head}</tr></thead><tbody>${body ||
+    `<tr><td colspan="8">No researcher matches “${esc($("#q").value)}”${st.area >= 0 ? " in this area" : ""}.</td></tr>`}</tbody></table>`;
+}
+tableWrap.addEventListener("click", (e) => {
+  const s = e.target.closest("[data-sort]");
+  if (s) {
+    const k = s.dataset.sort;
+    st.sort = st.sort.key === k ? { key: k, dir: -st.sort.dir } : { key: k, dir: ["name", "inst", "a", "rank"].includes(k) ? 1 : -1 };
+    renderTable(); return;
+  }
+  const tr = e.target.closest("tr[data-r]");
+  if (tr) select(+tr.dataset.r, { fly: false });
+});
+
+// ---------- controls ----------
+function setPressed(ids, on) { ids.forEach((id) => $("#" + id).setAttribute("aria-pressed", String(id === on))); }
+$("#t-co").onclick = (e) => { st.co = !st.co; e.currentTarget.setAttribute("aria-pressed", st.co); draw(); };
+$("#t-sim").onclick = (e) => { st.sim = !st.sim; e.currentTarget.setAttribute("aria-pressed", st.sim); draw(); };
+$("#c-area").onclick = () => { st.color = "area"; setPressed(["c-area", "c-rob"], "c-area"); renderPanel(); draw(); };
+$("#c-rob").onclick = () => { st.color = "rob"; setPressed(["c-area", "c-rob"], "c-rob"); renderPanel(); draw(); };
+const DOC_VIEWS = { beyond: "beyond-cs", methods: "methods" };
+function setView(v, opts = {}) {
+  if ((v === "findings" && !F) || (v === "beyond" && !BX) || (v === "3d" && !HAS3D)) return;
+  const was = st.view;
+  st.view = v;
+  setPressed(["v-map", "v-3d", "v-find", "v-beyond", "v-table", "v-methods"],
+    { map: "v-map", "3d": "v-3d", findings: "v-find", beyond: "v-beyond", table: "v-table", methods: "v-methods" }[v]);
+  tableWrap.hidden = v !== "table"; docWrap.hidden = !(v in DOC_VIEWS); closeResults(); ctip.hidden = true;
+  $(".main").classList.toggle("docmode", v in DOC_VIEWS);
+  // Lines and Colour only act on the plain map and the 3D view; the map controls are hidden under documents and the table
+  for (const id of ["t-co", "t-sim", "c-area", "c-rob"]) $("#" + id).disabled = v !== "map" && v !== "3d";
+  const mapLike = v === "map" || v === "findings" || v === "3d";
+  $(".zoom").inert = !mapLike; cv.setAttribute("aria-hidden", String(!mapLike));
+  $("#z-spin").hidden = v !== "3d";
+  if (v !== "3d") { cancelAnimationFrame(spinRaf); spinRaf = 0; }
+  $("#hint").textContent = v === "3d" ? "Drag to rotate · shift-drag to pan · scroll to zoom · click a dot" : "Scroll to zoom · drag to pan · click a dot";
+  cv.setAttribute("aria-label", v === "3d"
+    ? "Three-dimensional map of researchers positioned by research similarity. Use the table view or the panel for a text version."
+    : "Map of researchers positioned by research similarity. Use the table view or the panel for a text version.");
+  announce({ map: "Map view", "3d": "3D view", findings: "Findings view", beyond: "Beyond computer science", table: "Table view", methods: "Methods and metrics" }[v]);
+  const clearHash = () => { try { history.replaceState(null, "", location.pathname + location.search); } catch (_) {} };
+  if (v in DOC_VIEWS) {
+    st.sel = -1; st.area = -1;
+    if (v === "beyond") renderBeyond(); else renderMethods();
+    docWrap.scrollTop = 0; renderPanel(); panel.scrollTop = 0;
+    try { history.replaceState(null, "", "#" + DOC_VIEWS[v]); } catch (_) {}
+    return;
+  }
+  if (v === "table") { if (was !== "map" && was !== "3d") { st.sel = -1; clearHash(); renderPanel(); } renderTable(); return; }
+  resize();
+  if (v === "findings") { if (opts.finding != null) st.finding = opts.finding; setFinding(st.finding); }
+  else {
+    // the map, the 3D view and the table share a selection; the other views start fresh
+    if (was !== "map" && was !== "3d" && was !== "table") {
+      st.sel = -1; st.area = -1; clearHash();
+      if (v === "3d") { touched3 = false; Object.assign(cam3, home3()); }
+    }
+    try {
+      if (st.sel < 0 && v === "3d") history.replaceState(null, "", "#3d");
+      else if (st.sel < 0 && was === "3d") clearHash();
+    } catch (_) {}
+    renderPanel();
+    if (st.sel >= 0 && (v === "3d" || was === "3d")) focusSel(false); // the other layout puts them somewhere else
+    else draw();
+    if (v === "3d") setSpin(spinOn);
+  }
+}
+$("#v-map").onclick = () => setView("map");
+$("#v-3d").onclick = () => setView("3d");
+if (!HAS3D) $("#v-3d").hidden = true;
+$("#v-find").onclick = () => setView("findings");
+$("#v-beyond").onclick = () => setView("beyond");
+$("#v-methods").onclick = () => setView("methods");
+if (!BX) $("#v-beyond").hidden = true;
+$("#v-table").onclick = () => setView("table");
+if (!F) $("#v-find").hidden = true;
+
+// ---------- search ----------
+const q = $("#q"), list = $("#results"), box = $("#search-box");
+let hits = [], cur = -1;
+function closeResults() { list.hidden = true; q.setAttribute("aria-expanded", "false"); cur = -1; }
+function renderResults() {
+  list.innerHTML = hits.length ? hits.map((i, k) => {
+    const r = R[i];
+    return `<li role="option" id="opt-${k}" data-k="${k}" aria-selected="${k === cur}"><span class="sw" style="background:${areaColor(r.a)}"></span>
+      <span class="nm">${esc(r.name)}</span><span class="ct">${fmt(r.cites)}</span><span class="in">${esc(r.inst || "")}</span></li>`;
+  }).join("") : `<li class="empty">No researcher or institution matches “${esc(q.value)}”.</li>`;
+  list.hidden = false; q.setAttribute("aria-expanded", "true");
+  if (cur >= 0) q.setAttribute("aria-activedescendant", "opt-" + cur); else q.removeAttribute("aria-activedescendant");
+}
+q.addEventListener("input", () => {
+  if (st.view === "table") { renderTable(); return; }
+  const v = fold(q.value.trim());
+  if (!v) { closeResults(); return; }
+  hits = byCites.filter((i) => hay[i].includes(v))
+    .sort((a, b) => (fold(R[b].name).startsWith(v) - fold(R[a].name).startsWith(v)) || (R[b].cites - R[a].cites)).slice(0, 8);
+  cur = hits.length ? 0 : -1; renderResults();
+});
+q.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") e.stopPropagation(); // Esc closes the search, never the selection
+  if (list.hidden) { if (e.key === "Escape") q.blur(); return; }
+  if (e.key === "ArrowDown") { cur = Math.min(hits.length - 1, cur + 1); renderResults(); e.preventDefault(); }
+  else if (e.key === "ArrowUp") { cur = Math.max(0, cur - 1); renderResults(); e.preventDefault(); }
+  else if (e.key === "Enter" && cur >= 0) { pick(hits[cur]); e.preventDefault(); }
+  else if (e.key === "Escape") closeResults();
+});
+list.addEventListener("pointerdown", (e) => { const li = e.target.closest("[data-k]"); if (li) { e.preventDefault(); pick(hits[+li.dataset.k]); } });
+q.addEventListener("blur", () => setTimeout(closeResults, 120));
+function pick(i) {
+  closeResults(); q.value = ""; q.blur(); st.area = -1;
+  if (st.view in DOC_VIEWS) setView("map"); // a researcher is shown on the map, not over a document
+  select(i);
+}
+document.addEventListener("keydown", (e) => {
+  const typing = /^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName);
+  if (e.key === "/" && !typing) { e.preventDefault(); q.focus(); }
+  else if (e.key === "Escape" && !typing && st.sel >= 0) select(-1, { fly: false });
+  else if (in3d() && !typing && /^Arrow(Left|Right|Up|Down)$/.test(e.key) && (document.activeElement === document.body || document.activeElement === cv)) {
+    e.preventDefault(); if (spinOn) setSpin(false); touched3 = true; // arrow keys turn the 3D view
+    if (e.key === "ArrowLeft") cam3.yaw += 0.12; else if (e.key === "ArrowRight") cam3.yaw -= 0.12;
+    else cam3.pitch = clampPitch(cam3.pitch + (e.key === "ArrowUp" ? -0.1 : 0.1));
+    draw();
+  }
+});
+
+// ---------- boot ----------
+readTokens();
+const reTheme = () => { readTokens(); renderPanel(); draw(); if (st.view === "table") renderTable(); };
+new MutationObserver(reTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "class", "style"] });
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", reTheme);
+new ResizeObserver(() => { if (st.view === "map" || st.view === "findings" || st.view === "3d") resize(); }).observe($("#stage"));
+renderPanel();
+resize();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
+const fromHash = () => {
+  const id = location.hash.slice(1), fm = /^finding-(\d)$/.exec(id);
+  if (id === "beyond-cs" && BX) { if (st.view !== "beyond") setView("beyond"); return; }
+  if (id === "methods") { if (st.view !== "methods") setView("methods"); return; }
+  if (id === "3d" && HAS3D) { if (st.view !== "3d") setView("3d"); return; }
+  if (fm && F) { const k = Math.min(FTITLES.length, Math.max(1, +fm[1])) - 1; if (st.view !== "findings") setView("findings", { finding: k }); else if (k !== st.finding) setFinding(k); return; }
+  const i = R.findIndex((r) => r.id === id);
+  if (i >= 0 && i !== st.sel) { if (st.view in DOC_VIEWS) setView("map"); select(i); }
+};
+window.addEventListener("hashchange", fromHash);
+fromHash();
+$("#subtitle").textContent = `The ${fmt(N)} most-cited researchers in computer science and robotics, placed by what they publish`;
+})();
+</script>

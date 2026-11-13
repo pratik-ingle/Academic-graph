@@ -1,0 +1,7 @@
+.env
+.venv/
+data/
+neo4j/
+__pycache__/
+web/index.html
+web/atlas.html

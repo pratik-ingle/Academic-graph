@@ -1,0 +1,81 @@
+Data retrieved 2026-11-07; graph fingerprint c89ab2b22d88bb1c
+
+======== 1. Are CS areas converging? (most-cited papers up to 2016 vs since 2022) ====
+658 researchers with >= 8 papers in both periods and >= 5 in 2017-21.
+Change in area distinctness (same-area minus cross-area similarity):
+  BIASED Published areas, raw vectors (earlier method)              -20%
+  BIASED Areas fitted on the up-to-2016 papers                      -31%
+  BIASED Areas fitted on the since-2022 papers                      +63%
+  fair   Neutral areas from 2017–21 papers, k = 6 (3 seeds)         +7%  (seeds +6%..+9%)
+  fair   Neutral areas from 2017–21 papers, k = 8 (3 seeds)         +6%  (seeds +4%..+9%)
+  fair   Neutral areas from 2017–21 papers, k = 10 (3 seeds)        +4%  (seeds +3%..+5%)
+Shift toward the Artificial Intelligence area relative to the average researcher (95% CI):
+  Computer Vision                                            n=231 +0.0684 [+0.0391, +0.0974]
+  Reinforcement Learning                                     n= 21 +0.0275 [-0.0634, +0.1185]
+  Information Systems                                        n= 68 -0.0012 [-0.0710, +0.0698]
+  Robotics                                                   n= 15 -0.0363 [-0.1365, +0.0901]
+  Networks & Communications                                  n= 87 -0.0429 [-0.0793, -0.0033]
+  Stochastic Gradient Optimization · Sparse & Compressive Sensing n= 93 -0.0632 [-0.1125, -0.0123]
+  Medical Image Segmentation                                 n= 23 -0.0710 [-0.1377, -0.0092]
+Shift toward the Reinforcement Learning area relative to the average researcher (95% CI):
+  Computer Vision                                            n=231 +0.0407 [+0.0196, +0.0617]
+  Artificial Intelligence                                    n=120 +0.0244 [-0.0092, +0.0590]
+  Information Systems                                        n= 68 -0.0182 [-0.0550, +0.0191]
+  Networks & Communications                                  n= 87 -0.0428 [-0.0669, -0.0186]
+  Stochastic Gradient Optimization · Sparse & Compressive Sensing n= 93 -0.0449 [-0.0828, -0.0065]
+  Robotics                                                   n= 15 -0.0963 [-0.1699, -0.0250]
+  Medical Image Segmentation                                 n= 23 -0.1114 [-0.1469, -0.0755]
+
+======== 2. LLM adoption =======================================================
+65% of 931 researchers active since 2022 have >= 1 LLM paper among their 30 most-cited recent papers.
+  Reinforcement Learning                                       88% of 32
+  Artificial Intelligence                                      83% of 184
+  Information Systems                                          74% of 92
+  Computer Vision                                              70% of 286
+  Networks & Communications                                    56% of 152
+  Robotics                                                     40% of 20
+  Stochastic Gradient Optimization · Sparse & Compressive Sensing   40% of 128
+  Medical Image Segmentation                                   38% of 37
+LLM share of all computer-science papers: 2020 0.01%, 2021 0.03%, 2022 0.12%, 2023 1.62%, 2024 4.56%, 2025 6.86%, 2026* 9.46% (* partial year)
+
+======== 3. Robotics ===========================================================
+Roboticists, shift toward RL relative to the average researcher; most toward: Wolfram Burgard (+0.154), Daniela L. Rus (+0.078), Roland Siegwart (+0.047), Peter Corke (-0.013), B.J. Nelson (-0.051)
+... most away: Simon Julier (-0.116), Oussama Khatib (-0.171), Vijay Kumar (-0.192), Maja J. Matarić (-0.349), Matt Haberland (-0.431)
+
+======== 4. Collaboration vs similarity (co-authors' shared papers excluded) ====
+Most vs least similar tenth of pairs: 137x as likely to have co-authored (177x if shared papers are left in); 55 pairs dropped.
+Observed / predicted co-author pairs per community (similarity only | + shared employer | strong ties):
+  Network Traffic & Congestion Control · Energy Efficient   0.68 |  0.75 |  0.67  same-employer pairs 0.5%
+  Video Surveillance & Tracking · Multimodal Machine Learn  0.75 |  0.82 |  0.73  same-employer pairs 1.3%
+  Metaheuristic Optimization · Multi-Objective Optimizatio  0.79 |  0.85 |  0.90  same-employer pairs 0.3%
+  Natural Language Processing · Sentiment Analysis & Opini  0.82 |  0.77 |  0.75  same-employer pairs 6.6%
+  Sparse & Compressive Sensing · Matrix Theory              0.93 |  0.98 |  0.89  same-employer pairs 2.0%
+  Robotics & Sensor-Based Localization · Robotic Path Plan  0.98 |  1.04 |  1.24  same-employer pairs 1.9%
+  Vision & Imaging · Computer Graphics & Visualization      1.03 |  1.10 |  1.05  same-employer pairs 1.9%
+  Cryptography & Data Security · Formal Methods in Verific  1.04 |  1.07 |  1.08  same-employer pairs 2.8%
+  Recommender Systems · Information Retrieval & Search Beh  1.06 |  1.16 |  1.34  same-employer pairs 1.5%
+  Medical Image Segmentation · AI in cancer detection       1.09 |  1.24 |  1.10  same-employer pairs 0.7%
+  Usability & User Interface Design · Virtual Reality Appl  1.26 |  1.31 |  1.19  same-employer pairs 3.2%
+  Speech Recognition & Synthesis · Emotion & Mood Recognit  1.39 |  1.29 |  1.56  same-employer pairs 5.8%
+  Parallel Computing & Optimization · Distributed & Parall  1.62 |  1.51 |  1.47  same-employer pairs 6.4%
+  Remote-Sensing Image Classification · Biometric Identifi  1.65 |  1.81 |  2.38  same-employer pairs 1.1%
+  Fuzzy Logic & Control Systems · Rough Sets & Fuzzy Logic  1.69 |  1.80 |  1.50  same-employer pairs 1.5%
+  Domain Adaptation & Few-Shot Learning · Generative Adver  1.85 |  1.17 |  1.96  same-employer pairs 20.7%
+  Reinforcement Learning · Artificial Intelligence in Game  2.68 |  1.59 |  2.40  same-employer pairs 32.5%
+  Stochastic Gradient Optimization · Bayesian Methods & Mi  3.72 |  3.90 |  4.09  same-employer pairs 2.4%
+corr(same-employer share, ratio) = 0.46
+Research twins (verified 0 joint works): Dan Boneh ~ Mihir Bellare 0.97; Moni Naor ~ Shafi Goldwasser 0.97; Mihir Bellare ~ Craig Gentry 0.97; Moni Naor ~ Silvio M. Micali 0.97; Rajeev Alur ~ Amir Pnueli 0.96; Amit Sahai ~ Silvio M. Micali 0.95
+
+======== 5. One-paper researchers ==============================================
+>= 50% of citations from one paper: 187; >= 70%: 91
+  Networks & Communications                                  median  11%  one-paper  12% of 167
+  Robotics                                                   median  12%  one-paper  14% of 21
+  Information Systems                                        median  14%  one-paper  13% of 102
+  Stochastic Gradient Optimization · Sparse & Compressive Sensing median  18%  one-paper  11% of 148
+  Computer Vision                                            median  18%  one-paper  19% of 297
+  Artificial Intelligence                                    median  33%  one-paper  28% of 193
+  Reinforcement Learning                                     median  34%  one-paper  27% of 33
+  Medical Image Segmentation                                 median  36%  one-paper  38% of 39
+  Industry                                                   median  37%  one-paper  34% of 243
+  Academia & other                                           median  15%  one-paper  14% of 757
+Largest cohorts: PyTorch: An Imperative Style, High-Performance Dee (13); Language Models are Few-Shot Learners (11); An Image is Worth 16x16 Words: Transformers for Im (10); ImageNet Large Scale Visual Recognition Challenge (9); Scikit-learn: Machine Learning in Python (9); Attention Is All You Need (8)

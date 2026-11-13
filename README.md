@@ -3,7 +3,7 @@
 A knowledge graph of the **1,000 most-cited researchers in computer science and robotics**,
 with one SPECTER2 embedding per researcher built from their research.
 
-**Live atlas: <https://pratik-ingle.github.io/A-graph-Academic-graph-/>** (3D view: [`#3d`](https://pratik-ingle.github.io/A-graph-Academic-graph-/#3d))
+**Live atlas: <https://pratik-ingle.github.io/A-graph-Academic-graph-/>** (opens in the 3D view; flat map: [`#map`](https://pratik-ingle.github.io/A-graph-Academic-graph-/#map))
 
 It ships as:
 
